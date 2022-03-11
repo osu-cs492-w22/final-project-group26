@@ -3,18 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/favorite"
-        android:title="@string/nav_bot_favorite"
+        android:title="@string/label_favorite"
         android:icon="@drawable/ic_action_favorite_off"/>
     <item
         android:id="@+id/market"
-        android:title="@string/nav_bot_market"
+        android:title="@string/label_market"
         android:icon="@drawable/ic_action_market"/>
     <item
         android:id="@+id/home"
-        android:title="@string/nav_bot_home"
+        android:title="@string/label_home"
         android:icon="@drawable/ic_action_home"/>
     <item
         android:id="@+id/settings"
-        android:title="@string/nav_bot_settings"
+        android:title="@string/label_settings"
         android:icon="@drawable/ic_action_settings"/>
 </menu>
