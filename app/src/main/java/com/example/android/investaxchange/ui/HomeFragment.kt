@@ -2,6 +2,7 @@ package com.example.android.investaxchange.ui
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -21,7 +22,7 @@ class HomeFragment : Fragment(R.layout.github_search) {
     private val TAG = "HomeFragment"
 
     private val repoListAdapter = GitHubRepoListAdapter(::onGitHubRepoClick)
-    private val viewModel: GitHubSearchViewModel by viewModels()
+    private val viewModel: AlpacaAccountViewModel by viewModels()
 
     private lateinit var searchBoxET: EditText
     private lateinit var searchResultsListRV: RecyclerView
@@ -41,55 +42,63 @@ class HomeFragment : Fragment(R.layout.github_search) {
 
         searchResultsListRV.adapter = repoListAdapter
 
-        viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
-            repoListAdapter.updateRepoList(searchResults)
+
+        viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
+
+            if (searchResult != null) {
+
+                Log.d("HomeFragment", searchResult.id)
+            }
+
+            //repoListAdapter.updateRepoList(searchResults)
         }
 
-        viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
-                LoadingStatus.LOADING -> {
-                    loadingIndicator.visibility = View.VISIBLE
-                    searchResultsListRV.visibility = View.INVISIBLE
-                    searchErrorTV.visibility = View.INVISIBLE
-                }
-                LoadingStatus.ERROR -> {
-                    loadingIndicator.visibility = View.INVISIBLE
-                    searchResultsListRV.visibility = View.INVISIBLE
-                    searchErrorTV.visibility = View.VISIBLE
-                }
-                else -> {
-                    loadingIndicator.visibility = View.INVISIBLE
-                    searchResultsListRV.visibility = View.VISIBLE
-                    searchErrorTV.visibility = View.INVISIBLE
-                }
-            }
-        }
+//        viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
+//            when (uiState) {
+//                LoadingStatus.LOADING -> {
+//                    loadingIndicator.visibility = View.VISIBLE
+//                    searchResultsListRV.visibility = View.INVISIBLE
+//                    searchErrorTV.visibility = View.INVISIBLE
+//                }
+//                LoadingStatus.ERROR -> {
+//                    loadingIndicator.visibility = View.INVISIBLE
+//                    searchResultsListRV.visibility = View.INVISIBLE
+//                    searchErrorTV.visibility = View.VISIBLE
+//                }
+//                else -> {
+//                    loadingIndicator.visibility = View.INVISIBLE
+//                    searchResultsListRV.visibility = View.VISIBLE
+//                    searchErrorTV.visibility = View.INVISIBLE
+//                }
+//            }
+//        }
 
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         val searchBtn: Button = view.findViewById(R.id.btn_search)
         searchBtn.setOnClickListener {
-            val query = searchBoxET.text.toString()
-            if (!TextUtils.isEmpty(query)) {
-                val sort = sharedPrefs.getString(
-                    getString(R.string.pref_sort_key),
-                    getString(R.string.pref_sort_default)
-                )
-                val user = sharedPrefs.getString(
-                    getString(R.string.pref_user_key),
-                    null
-                )
-                val languages = sharedPrefs.getStringSet(
-                    getString(R.string.pref_language_key),
-                    null
-                )
-                val firstIssues = sharedPrefs.getInt(
-                    getString(R.string.pref_first_issues_key),
-                    0
-                )
-                viewModel.loadSearchResults(query, sort, user, languages, firstIssues)
-                searchResultsListRV.scrollToPosition(0)
-            }
+            //val query = searchBoxET.text.toString()
+//            if (!TextUtils.isEmpty(query)) {
+//                val sort = sharedPrefs.getString(
+//                    getString(R.string.pref_sort_key),
+//                    getString(R.string.pref_sort_default)
+//                )
+//                val user = sharedPrefs.getString(
+//                    getString(R.string.pref_user_key),
+//                    null
+//                )
+//                val languages = sharedPrefs.getStringSet(
+//                    getString(R.string.pref_language_key),
+//                    null
+//                )
+//                val firstIssues = sharedPrefs.getInt(
+//                    getString(R.string.pref_first_issues_key),
+//                    0
+//                )
+            viewModel.loadAccountResult()
+            Log.d("HomeFragment", "CLick2")
+            searchResultsListRV.scrollToPosition(0)
+            //}
         }
     }
 

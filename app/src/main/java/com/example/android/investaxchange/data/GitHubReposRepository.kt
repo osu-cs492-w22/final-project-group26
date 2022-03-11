@@ -1,14 +1,14 @@
 package com.example.android.investaxchange.data
 
 import android.text.TextUtils
-import com.example.android.investaxchange.api.AlpacaService
+import com.example.android.investaxchange.api.GitHubService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 class GitHubReposRepository(
-    private val service: AlpacaService,
+    private val service: GitHubService,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
     suspend fun loadRepositoriesSearch(

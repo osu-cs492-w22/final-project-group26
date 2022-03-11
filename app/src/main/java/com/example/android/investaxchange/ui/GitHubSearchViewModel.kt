@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.investaxchange.data.GitHubRepo
 import com.example.android.investaxchange.data.GitHubReposRepository
-import com.example.android.investaxchange.api.AlpacaService
+import com.example.android.investaxchange.api.GitHubService
 import com.example.android.investaxchange.data.LoadingStatus
 import kotlinx.coroutines.launch
 
 class GitHubSearchViewModel : ViewModel() {
-    private val repository = GitHubReposRepository(AlpacaService.create())
+    private val repository = GitHubReposRepository(GitHubService.create())
 
     private val _searchResults = MutableLiveData<List<GitHubRepo>?>(null)
     val searchResults: LiveData<List<GitHubRepo>?> = _searchResults
