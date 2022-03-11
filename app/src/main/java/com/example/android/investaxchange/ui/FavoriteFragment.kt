@@ -17,8 +17,8 @@ import com.example.android.investaxchange.data.GitHubRepo
 import com.example.android.investaxchange.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
-class GitHubSearchFragment : Fragment(R.layout.github_search) {
-    private val TAG = "GitHubSearchFragment"
+class FavoriteFragment : Fragment(R.layout.favorite) {
+    private val TAG = "FavoriteFragment"
 
     private val repoListAdapter = GitHubRepoListAdapter(::onGitHubRepoClick)
     private val viewModel: GitHubSearchViewModel by viewModels()
@@ -94,7 +94,7 @@ class GitHubSearchFragment : Fragment(R.layout.github_search) {
     }
 
     private fun onGitHubRepoClick(repo: GitHubRepo) {
-        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo, 16)
-        findNavController().navigate(directions)
+//        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo, 16)
+//        findNavController().navigate(directions)
     }
 }

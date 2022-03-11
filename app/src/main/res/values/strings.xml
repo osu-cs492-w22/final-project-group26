@@ -5,9 +5,9 @@
     <string name="search">Search</string>
     <string name="search_error">We were unable to execute your search.  Please check your internet connection and try again.</string>
 
-    <string name="label_symbol_search">Investa XChange</string>
-    <string name="label_repo_detail">GitHub Repo Details</string>
-    <string name="label_bookmarked_repos">Bookmarked Repos</string>
+    <string name="label_favorite">Favorites</string>
+    <string name="label_market">Market</string>
+    <string name="label_home">Home</string>
     <string name="label_settings">Settings</string>
 
     <string name="action_bookmark">Bookmark this repo</string>

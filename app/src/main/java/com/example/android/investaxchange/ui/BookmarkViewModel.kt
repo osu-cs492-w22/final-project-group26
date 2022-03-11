@@ -9,7 +9,7 @@ import com.example.android.investaxchange.data.BookmarkedReposRepository
 import com.example.android.investaxchange.data.GitHubRepo
 import kotlinx.coroutines.launch
 
-class BookmarkedReposViewModel(application: Application) : AndroidViewModel(application) {
+class BookmarkViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = BookmarkedReposRepository(
         AppDatabase.getInstance(application).gitHubRepoDao()
     )

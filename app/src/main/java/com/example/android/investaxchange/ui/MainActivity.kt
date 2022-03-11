@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.example.android.investaxchange.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -28,11 +29,9 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment: NavHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        findViewById<NavigationView>(R.id.nav_view).setupWithNavController(navController)
+       findViewById<BottomNavigationView>(R.id.bottomNavigationView).setupWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {

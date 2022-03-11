@@ -17,7 +17,7 @@ interface AlpacaService {
     ) : GitHubSearchResults
 
     companion object {
-        private const val BASE_URL = "https://data.alpaca.market/v2/"
+        private const val BASE_URL = "https://paper-api.alpaca.markets/v2/"
         fun create() : AlpacaService {
             val moshi = Moshi.Builder()
                 .addLast(KotlinJsonAdapterFactory())

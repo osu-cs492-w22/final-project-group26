@@ -17,14 +17,12 @@ import androidx.navigation.fragment.navArgs
 import com.example.android.investaxchange.R
 import com.google.android.material.snackbar.Snackbar
 
-const val EXTRA_GITHUB_REPO = "com.example.android.investaxchange.GitHubRepo"
-
 class RepoDetailFragment : Fragment(R.layout.repo_detail) {
     private var isBookmarked = false
 
     private val args: RepoDetailFragmentArgs by navArgs()
 
-    private val viewModel: BookmarkedReposViewModel by viewModels()
+    private val viewModel: BookmarkViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,7 +35,6 @@ class RepoDetailFragment : Fragment(R.layout.repo_detail) {
         view.findViewById<TextView>(R.id.tv_repo_stars).text = args.repo.stars.toString()
         view.findViewById<TextView>(R.id.tv_repo_description).text = args.repo.description
     }
-
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.activity_repo_detail, menu)
         val bookmarkItem = menu.findItem(R.id.action_bookmark)
@@ -74,7 +71,7 @@ class RepoDetailFragment : Fragment(R.layout.repo_detail) {
                 true
             }
             R.id.action_bookmark -> {
-                toggleRepoBookmark(item)
+                // toggleRepoBookmark(item)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -85,17 +82,17 @@ class RepoDetailFragment : Fragment(R.layout.repo_detail) {
      * This method toggles the state of the bookmark icon in the top app bar whenever the user
      * clicks it.
      */
-    private fun toggleRepoBookmark(menuItem: MenuItem) {
-        isBookmarked = !isBookmarked
-        when (isBookmarked) {
-            true -> {
-                viewModel.addBookmarkedRepo(args.repo)
-            }
-            false -> {
-                viewModel.removeBookmarkedRepo(args.repo)
-            }
-        }
-    }
+//    private fun toggleRepoBookmark(menuItem: MenuItem) {
+//        isBookmarked = !isBookmarked
+//        when (isBookmarked) {
+//            true -> {
+//                viewModel.addBookmarkedRepo(args.repo)
+//            }
+//            false -> {
+//                viewModel.removeBookmarkedRepo(args.repo)
+//            }
+//        }
+//    }
 
     private fun viewRepoOnWeb() {
         val intent: Intent = Uri.parse(args.repo.url).let {
