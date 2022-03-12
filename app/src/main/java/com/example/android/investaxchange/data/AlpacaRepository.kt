@@ -1,19 +1,45 @@
 package com.example.android.investaxchange.data
 
-import com.example.android.investaxchange.api.AlpacaService
+import com.example.android.investaxchange.api.AlpacaDataService
+import com.example.android.investaxchange.api.AlpacaTradingService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 class AlpacaRepository(
-    private val service: AlpacaService,
+    private val dataService: AlpacaDataService,
+    private val tradingService: AlpacaTradingService,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-    suspend fun loadAccount(): Result<UserAccount> =
+    suspend fun loadAssets(): Result<UserAccount> =
         withContext(ioDispatcher) {
             try {
-                val results = service.getAccount()
+                val results = tradingService.getAssets()
+                println(results)
+                Result.success(results.item)
+            } catch (e: Exception) {
+                println(e)
+                Result.failure(e)
+            }
+        }
+
+    suspend fun loadSnapshot(symbol: String): Result<UserAccount> =
+        withContext(ioDispatcher) {
+            try {
+                val results = dataService.getSnapshot(symbol)
+                println(results)
+                Result.success(results.item)
+            } catch (e: Exception) {
+                println(e)
+                Result.failure(e)
+            }
+        }
+
+    suspend fun loadSnapshots(symbols: List<String>): Result<UserAccount> =
+        withContext(ioDispatcher) {
+            try {
+                val results = dataService.getSnapshots(symbols.joinToString(","))
                 Result.success(results.item)
             } catch (e: Exception) {
                 Result.failure(e)

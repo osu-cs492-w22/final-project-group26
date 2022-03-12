@@ -8,24 +8,25 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
+interface AlpacaDataService {
+    @GET("v2/stocks/{symbol}/snapshot")
+    suspend fun getSnapshot(@Path("symbol") symbol: String) : UserAccountResults
 
-val KEYID = BuildConfig.KEYID
-val SECRETID = BuildConfig.SECRETID
-
-interface AlpacaService {
-    @GET("v2/account")
-    suspend fun getAccount() : UserAccountResults
+    @GET("v2/stocks/snapshots")
+    suspend fun getSnapshots(@Query("symbols") symbols: String) : UserAccountResults
 
     companion object {
-        private const val BASE_URL = "https://paper-api.alpaca.markets/"
+        private const val BASE_URL = "https://data.alpaca.markets/"
 
-        fun create() : AlpacaService {
+        fun create() : AlpacaDataService {
             val client = OkHttpClient.Builder()
                 .addInterceptor { chain ->
                     val request = chain.request().newBuilder()
-                        .addHeader("APCA-API-KEY-ID", KEYID)
-                        .addHeader("APCA-API-SECRET-KEY", SECRETID)
+                        .addHeader("APCA-API-KEY-ID", BuildConfig.KEYID)
+                        .addHeader("APCA-API-SECRET-KEY", BuildConfig.SECRETID)
                         .build()
 
                     chain.proceed(request)
@@ -39,7 +40,7 @@ interface AlpacaService {
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(client)
                 .build()
-            return retrofit.create(AlpacaService::class.java)
+            return retrofit.create(AlpacaDataService::class.java)
         }
     }
 }

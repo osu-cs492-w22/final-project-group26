@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.android.investaxchange.api.AlpacaService
-import com.example.android.investaxchange.api.GitHubService
+import com.example.android.investaxchange.api.AlpacaDataService
+import com.example.android.investaxchange.api.AlpacaTradingService
 import com.example.android.investaxchange.data.*
 import kotlinx.coroutines.launch
 
 class AlpacaAccountViewModel : ViewModel() {
-    private val repository = AlpacaRepository(AlpacaService.create())
+    private val repository = AlpacaRepository(AlpacaDataService.create(), AlpacaTradingService.create())
 
     private val _searchResults = MutableLiveData<UserAccount?>(null)
     val searchResults: LiveData<UserAccount?> = _searchResults
@@ -20,8 +20,10 @@ class AlpacaAccountViewModel : ViewModel() {
 
     fun loadAccountResult() {
         viewModelScope.launch {
+            repository.loadAssets()
+
             _loadingStatus.value = LoadingStatus.LOADING
-            val result = repository.loadAccount()
+            val result = repository.loadSnapshot("AAPL")
             _searchResults.value = result.getOrNull()
             _loadingStatus.value = when (result.isSuccess) {
                 true ->  LoadingStatus.SUCCESS
