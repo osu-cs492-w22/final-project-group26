@@ -45,10 +45,7 @@ class HomeFragment : Fragment(R.layout.github_search) {
 
         viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
 
-            if (searchResult != null) {
-
-                Log.d("HomeFragment", searchResult.id)
-            }
+            println(searchResult)
 
             //repoListAdapter.updateRepoList(searchResults)
         }

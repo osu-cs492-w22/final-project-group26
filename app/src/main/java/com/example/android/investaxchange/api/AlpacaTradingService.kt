@@ -1,6 +1,7 @@
 package com.example.android.investaxchange.api
 
 import com.example.android.investaxchange.BuildConfig
+import com.example.android.investaxchange.data.Asset
 import com.example.android.investaxchange.data.UserAccountResults
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -12,8 +13,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AlpacaTradingService {
+    /**
+     * Get a list of available assets.
+     */
     @GET("v2/assets")
-    suspend fun getAssets() : UserAccountResults
+    suspend fun getAssets() : List<Asset>
 
     companion object {
         private const val BASE_URL = "https://paper-api.alpaca.markets/"

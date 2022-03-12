@@ -12,36 +12,38 @@ class AlpacaRepository(
     private val tradingService: AlpacaTradingService,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-    suspend fun loadAssets(): Result<UserAccount> =
+    suspend fun loadAssets(): Result<List<Asset>> =
         withContext(ioDispatcher) {
             try {
                 val results = tradingService.getAssets()
                 println(results)
-                Result.success(results.item)
+                Result.success(results)
             } catch (e: Exception) {
                 println(e)
                 Result.failure(e)
             }
         }
 
-    suspend fun loadSnapshot(symbol: String): Result<UserAccount> =
+    suspend fun loadSnapshot(symbol: String): Result<Snapshot> =
         withContext(ioDispatcher) {
             try {
                 val results = dataService.getSnapshot(symbol)
                 println(results)
-                Result.success(results.item)
+                Result.success(results)
             } catch (e: Exception) {
                 println(e)
                 Result.failure(e)
             }
         }
 
-    suspend fun loadSnapshots(symbols: List<String>): Result<UserAccount> =
+    suspend fun loadSnapshots(symbols: List<String>): Result<Map<String, Snapshot>> =
         withContext(ioDispatcher) {
             try {
                 val results = dataService.getSnapshots(symbols.joinToString(","))
-                Result.success(results.item)
+                println(results)
+                Result.success(results)
             } catch (e: Exception) {
+                println(e)
                 Result.failure(e)
             }
         }

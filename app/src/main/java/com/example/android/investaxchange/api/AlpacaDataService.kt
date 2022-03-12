@@ -1,6 +1,7 @@
 package com.example.android.investaxchange.api
 
 import com.example.android.investaxchange.BuildConfig
+import com.example.android.investaxchange.data.Snapshot
 import com.example.android.investaxchange.data.UserAccountResults
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -12,11 +13,21 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AlpacaDataService {
+    /**
+     * Retrieve a snapshot of a specific symbol.
+     *
+     * @param symbol the symbol to retrieve the snapshot of
+     */
     @GET("v2/stocks/{symbol}/snapshot")
-    suspend fun getSnapshot(@Path("symbol") symbol: String) : UserAccountResults
+    suspend fun getSnapshot(@Path("symbol") symbol: String) : Snapshot
 
+    /**
+     * Retrieve snapshots of multiple symbols.
+     *
+     * @param symbols the symbols (comma-separated) to retrieve snapshots of
+     */
     @GET("v2/stocks/snapshots")
-    suspend fun getSnapshots(@Query("symbols") symbols: String) : UserAccountResults
+    suspend fun getSnapshots(@Query("symbols") symbols: String) : Map<String, Snapshot>
 
     companion object {
         private const val BASE_URL = "https://data.alpaca.markets/"

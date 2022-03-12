@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 class AlpacaAccountViewModel : ViewModel() {
     private val repository = AlpacaRepository(AlpacaDataService.create(), AlpacaTradingService.create())
 
-    private val _searchResults = MutableLiveData<UserAccount?>(null)
-    val searchResults: LiveData<UserAccount?> = _searchResults
+    private val _searchResults = MutableLiveData<Snapshot?>(null)
+    val searchResults: LiveData<Snapshot?> = _searchResults
 
     private val _loadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
 //    val loadingStatus: LiveData<LoadingStatus> = _loadingStatus
@@ -21,6 +21,7 @@ class AlpacaAccountViewModel : ViewModel() {
     fun loadAccountResult() {
         viewModelScope.launch {
             repository.loadAssets()
+            repository.loadSnapshots(listOf("AAPL", "TSLA"))
 
             _loadingStatus.value = LoadingStatus.LOADING
             val result = repository.loadSnapshot("AAPL")
