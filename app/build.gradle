@@ -18,7 +18,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "KEYID", KEYID)
-        buildConfigField("String", "SECRETID", KEYID)
+        buildConfigField("String", "SECRETID", SECRETID)
     }
 
     buildTypes {
