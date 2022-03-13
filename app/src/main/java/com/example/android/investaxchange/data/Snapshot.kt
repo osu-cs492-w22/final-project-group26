@@ -68,23 +68,3 @@ data class Quote(
     @Json(name = "c")
     val conditions: List<String>,
 )
-
-data class Bar(
-    @Json(name = "t")
-    val time: String,
-
-    @Json(name = "o")
-    val openPrice: Double,
-
-    @Json(name = "h")
-    val highPrice: Double,
-
-    @Json(name = "l")
-    val lowPrice: Double,
-
-    @Json(name = "c")
-    val closePrice: Double,
-
-    @Json(name = "v")
-    val volume: Int,
-)

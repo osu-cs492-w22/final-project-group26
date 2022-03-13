@@ -1,14 +1,11 @@
 package com.example.android.investaxchange.ui
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
@@ -20,8 +17,8 @@ import com.example.android.investaxchange.data.GitHubRepo
 import com.example.android.investaxchange.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
-class FavoriteFragment : Fragment(R.layout.favorite) {
-    private val TAG = "FavoriteFragment"
+class MarketItemFragment : Fragment(R.layout.market) {
+    private val TAG = "MarketItemFragment"
 
     private val repoListAdapter = AssetListAdapter(::onAssetClick)
     private val viewModel: GitHubSearchViewModel by viewModels()

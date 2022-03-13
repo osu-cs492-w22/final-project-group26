@@ -1,27 +1,25 @@
 package com.example.android.investaxchange.ui
 
 import android.os.Bundle
-import android.text.TextUtils
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
-import com.example.android.investaxchange.data.GitHubRepo
+import com.example.android.investaxchange.data.Asset
 import com.example.android.investaxchange.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class MarketFragment : Fragment(R.layout.market) {
     private val TAG = "MarketFragment"
 
-    private val repoListAdapter = GitHubRepoListAdapter(::onGitHubRepoClick)
-    private val viewModel: GitHubSearchViewModel by viewModels()
+    private val repoListAdapter = AssetListAdapter(::onAssetClick)
+    private val viewModel: AlpacaAssetsViewModel by viewModels()
 
     private lateinit var searchBoxET: EditText
     private lateinit var searchResultsListRV: RecyclerView
@@ -42,7 +40,7 @@ class MarketFragment : Fragment(R.layout.market) {
         searchResultsListRV.adapter = repoListAdapter
 
         viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
-            repoListAdapter.updateRepoList(searchResults)
+            repoListAdapter.updateAssetList(searchResults)
         }
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
@@ -65,35 +63,22 @@ class MarketFragment : Fragment(R.layout.market) {
             }
         }
 
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        viewModel.loadAssets()
 
-        val searchBtn: Button = view.findViewById(R.id.btn_search)
-        searchBtn.setOnClickListener {
-            val query = searchBoxET.text.toString()
-            if (!TextUtils.isEmpty(query)) {
-                val sort = sharedPrefs.getString(
-                    getString(R.string.pref_sort_key),
-                    getString(R.string.pref_sort_default)
-                )
-                val user = sharedPrefs.getString(
-                    getString(R.string.pref_user_key),
-                    null
-                )
-                val languages = sharedPrefs.getStringSet(
-                    getString(R.string.pref_language_key),
-                    null
-                )
-                val firstIssues = sharedPrefs.getInt(
-                    getString(R.string.pref_first_issues_key),
-                    0
-                )
-                viewModel.loadSearchResults(query, sort, user, languages, firstIssues)
-                searchResultsListRV.scrollToPosition(0)
+        searchBoxET.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                repoListAdapter.filter(s.toString())
             }
-        }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
     }
 
-    private fun onGitHubRepoClick(repo: GitHubRepo) {
+    private fun onAssetClick(asset: Asset) {
 //        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo, 16)
 //        findNavController().navigate(directions)
     }

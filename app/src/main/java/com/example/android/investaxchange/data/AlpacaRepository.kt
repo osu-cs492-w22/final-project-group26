@@ -15,6 +15,7 @@ class AlpacaRepository(
     suspend fun loadAssets(): Result<List<Asset>> =
         withContext(ioDispatcher) {
             try {
+                println("Getting assets....")
                 val results = tradingService.getAssets()
                 println(results)
                 Result.success(results)
@@ -40,6 +41,18 @@ class AlpacaRepository(
         withContext(ioDispatcher) {
             try {
                 val results = dataService.getSnapshots(symbols.joinToString(","))
+                println(results)
+                Result.success(results)
+            } catch (e: Exception) {
+                println(e)
+                Result.failure(e)
+            }
+        }
+
+    suspend fun loadBars(symbol: String, start: String, end: String): Result<BarsResponse> =
+        withContext(ioDispatcher) {
+            try {
+                val results = dataService.getBars(symbol, start, end)
                 println(results)
                 Result.success(results)
             } catch (e: Exception) {

@@ -1,6 +1,7 @@
 package com.example.android.investaxchange.api
 
 import com.example.android.investaxchange.BuildConfig
+import com.example.android.investaxchange.data.BarsResponse
 import com.example.android.investaxchange.data.Snapshot
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -27,6 +28,26 @@ interface AlpacaDataService {
      */
     @GET("v2/stocks/snapshots")
     suspend fun getSnapshots(@Query("symbols") symbols: String) : Map<String, Snapshot>
+
+    /**
+     * Retrieve a list of bars over a period of time.
+     *
+     * NOTE: on the free Alpaca plan, end time must be at least 15 minutes in the past, otherwise
+     * the query will fail.
+     *
+     * @param symbol the symbol to retrieve bars of
+     * @param start the start time in RFC-3339 format (e.g. 2022-03-10T00:00:00Z)
+     * @param end the end time in RFC-3339 format
+     * @param timeframe the interval of data points (defaults to "1Hour")
+     * @param limit the maximum number of data points to return (defaults to 10000)
+     */
+    @GET("v2/stocks/{symbol}/bars")
+    suspend fun getBars(
+        @Path("symbol") symbol: String,
+        @Query("start") start: String,
+        @Query("end") end: String,
+        @Query("timeframe") timeframe: String = "1Hour",
+        @Query("limit") limit: Int = 10000) : BarsResponse
 
     companion object {
         private const val BASE_URL = "https://data.alpaca.markets/"
