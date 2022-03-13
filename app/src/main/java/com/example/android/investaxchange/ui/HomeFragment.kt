@@ -1,106 +1,143 @@
 package com.example.android.investaxchange.ui
 
+import android.graphics.Color
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
 import com.example.android.investaxchange.data.GitHubRepo
-import com.example.android.investaxchange.data.LoadingStatus
-import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.tradingview.lightweightcharts.api.chart.models.color.surface.SolidColor
+import com.tradingview.lightweightcharts.api.chart.models.color.toIntColor
+import com.tradingview.lightweightcharts.api.interfaces.SeriesApi
+import com.tradingview.lightweightcharts.api.options.enums.TrackingModeExitMode
+import com.tradingview.lightweightcharts.api.options.models.*
+import com.tradingview.lightweightcharts.api.series.enums.CrosshairMode
+import com.tradingview.lightweightcharts.api.series.enums.LastPriceAnimationMode
+import com.tradingview.lightweightcharts.api.series.enums.LineWidth
+import com.tradingview.lightweightcharts.api.series.models.HistogramData
+import com.tradingview.lightweightcharts.api.series.models.PriceScaleId
+import com.tradingview.lightweightcharts.api.series.models.Time
+import com.tradingview.lightweightcharts.api.series.models.WhitespaceData
+import com.tradingview.lightweightcharts.runtime.plugins.DateTimeFormat
+import com.tradingview.lightweightcharts.runtime.plugins.PriceFormatter
+import com.tradingview.lightweightcharts.runtime.plugins.TimeFormatter
+import com.tradingview.lightweightcharts.view.ChartsView
 
-class HomeFragment : Fragment(R.layout.github_search) {
+class HomeFragment : Fragment(R.layout.home) {
     private val TAG = "HomeFragment"
 
-    private val repoListAdapter = GitHubRepoListAdapter(::onGitHubRepoClick)
-    private val viewModel: AlpacaAccountViewModel by viewModels()
+//    private val repoListAdapter = GitHubRepoListAdapter(::onGitHubRepoClick)
+    private val viewModel: AlpacaPortfolioViewModel by viewModels()
+    private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
 
-    private lateinit var searchBoxET: EditText
-    private lateinit var searchResultsListRV: RecyclerView
-    private lateinit var searchErrorTV: TextView
-    private lateinit var loadingIndicator: CircularProgressIndicator
+
+    lateinit var histogramSeries: SeriesApi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchBoxET = view.findViewById(R.id.et_search_box)
-        searchResultsListRV = view.findViewById(R.id.rv_search_results)
-        searchErrorTV = view.findViewById(R.id.tv_search_error)
-        loadingIndicator = view.findViewById(R.id.loading_indicator)
 
-        searchResultsListRV.layoutManager = LinearLayoutManager(requireContext())
-        searchResultsListRV.setHasFixedSize(true)
+        /*
+        *
+        * Creates a chart with newly updated results from portfolio
+        *
+        */
+        // TODO: Convert portfolio data into SeriesApi data
+        chartsView.subscribeOnChartStateChange { state ->
+            when (state) {
+                is ChartsView.State.Preparing -> Unit
+                is ChartsView.State.Ready -> {
+                    viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
+                        val data = listOf(
+                            HistogramData(Time.BusinessDay(2019, 6, 11), 40.01f),
+                            HistogramData(Time.BusinessDay(2019, 6, 12), 52.38f),
+                            HistogramData(Time.BusinessDay(2019, 6, 13), 36.30f),
+                            HistogramData(Time.BusinessDay(2019, 6, 14), 34.48f),
+                            WhitespaceData(Time.BusinessDay(2019, 6, 15)),
+                            WhitespaceData(Time.BusinessDay(2019, 6, 16)),
+                            HistogramData(Time.BusinessDay(2019, 6, 17), 41.50f),
+                            HistogramData(Time.BusinessDay(2019, 6, 18), 34.82f)
+                        )
+                        chartsView.api.addAreaSeries(
+                            AreaSeriesOptions(
+                                topColor = "rgba(33, 150, 243, 0.56)".toIntColor(),
+                                bottomColor = "rgba(33, 150, 243, 0.04)".toIntColor(),
+                                lineColor = "rgba(33, 150, 243, 1)".toIntColor(),
+                                lineWidth = LineWidth.FOUR
+                            ),
+                            onSeriesCreated = { series ->
+                                series.setData(data) //histogramSeries =
+                            }
+                        )
+                        if (searchResult != null) {
+                            val map: Map<Int, Double> =
+                                searchResult!!.timeStamp
+                                    .zip(searchResult.profit_loss)
+                                    .toMap()
+                            Log.d("HomeFragment", map.toString())
+                        }
 
-        searchResultsListRV.adapter = repoListAdapter
+//                       onSeriesCreated = { series -> series.setData(data.list) }
 
+                    }
 
-        viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
-
-            println(searchResult)
-
-            //repoListAdapter.updateRepoList(searchResults)
+                    applyChartOptions()
+                }
+                is ChartsView.State.Error -> {
+                    Log.d("HomeFragment", state.exception.message ?: "")
+                }
+            }
         }
 
-//        viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
-//            when (uiState) {
-//                LoadingStatus.LOADING -> {
-//                    loadingIndicator.visibility = View.VISIBLE
-//                    searchResultsListRV.visibility = View.INVISIBLE
-//                    searchErrorTV.visibility = View.INVISIBLE
-//                }
-//                LoadingStatus.ERROR -> {
-//                    loadingIndicator.visibility = View.INVISIBLE
-//                    searchResultsListRV.visibility = View.INVISIBLE
-//                    searchErrorTV.visibility = View.VISIBLE
-//                }
-//                else -> {
-//                    loadingIndicator.visibility = View.INVISIBLE
-//                    searchResultsListRV.visibility = View.VISIBLE
-//                    searchErrorTV.visibility = View.INVISIBLE
-//                }
-//            }
-//        }
 
-        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
-        val searchBtn: Button = view.findViewById(R.id.btn_search)
+
+        //val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
+        val searchBtn: Button = view.findViewById(R.id.btn_search_home)
         searchBtn.setOnClickListener {
-            //val query = searchBoxET.text.toString()
-//            if (!TextUtils.isEmpty(query)) {
-//                val sort = sharedPrefs.getString(
-//                    getString(R.string.pref_sort_key),
-//                    getString(R.string.pref_sort_default)
-//                )
-//                val user = sharedPrefs.getString(
-//                    getString(R.string.pref_user_key),
-//                    null
-//                )
-//                val languages = sharedPrefs.getStringSet(
-//                    getString(R.string.pref_language_key),
-//                    null
-//                )
-//                val firstIssues = sharedPrefs.getInt(
-//                    getString(R.string.pref_first_issues_key),
-//                    0
-//                )
-            viewModel.loadAccountResult()
-            Log.d("HomeFragment", "CLick2")
-            searchResultsListRV.scrollToPosition(0)
-            //}
+            //viewModel.loadAccountResult()
+
+            //histogramSeries.setData(data)
         }
     }
 
     private fun onGitHubRepoClick(repo: GitHubRepo) {
 //        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo, 16)
 //        findNavController().navigate(directions)
+    }
+
+    private fun applyChartOptions() {
+        chartsView.api.applyOptions {
+            handleScale = handleScaleOptions {
+                kineticScroll = kineticScrollOptions {
+                    touch = false
+                    mouse = false
+                }
+            }
+            layout = layoutOptions {
+                background = SolidColor(Color.WHITE)
+                textColor = Color.argb(255, 33, 56, 77).toIntColor()
+            }
+            crosshair = crosshairOptions {
+                mode = CrosshairMode.MAGNET
+            }
+            rightPriceScale = priceScaleOptions {
+                scaleMargins = PriceScaleMargins(
+                    top = 0.35f,
+                    bottom = 0.2f
+                )
+                borderColor = Color.argb(255, 197, 203, 206).toIntColor()
+            }
+            timeScale = timeScaleOptions {
+                fixRightEdge = true
+                borderColor = Color.argb(255, 197, 203, 206).toIntColor()
+                minBarSpacing = 65.0f
+            }
+            trackingMode = TrackingModeOptions(exitMode = TrackingModeExitMode.ON_TOUCH_END)
+        }
     }
 }

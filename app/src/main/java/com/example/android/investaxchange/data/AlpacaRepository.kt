@@ -48,6 +48,17 @@ class AlpacaRepository(
             }
         }
 
+    suspend fun loadPortfolioHistory(period: String, timeframe: String): Result<PortfolioHistory> =
+        withContext(ioDispatcher) {
+            try {
+                val results = tradingService.getPortfolioHistory(period, timeframe)
+                println(results)
+                Result.success(results)
+            } catch (e: Exception) {
+                println(e)
+                Result.failure(e)
+            }
+        }
 //    private fun buildAccountQuery(
 //        query: String,
 //        user: String?,

@@ -1,7 +1,6 @@
 package com.example.android.investaxchange.api
 
 import com.example.android.investaxchange.data.GitHubSearchResults
-import com.example.android.investaxchange.data.UserAccountResults
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.http.GET

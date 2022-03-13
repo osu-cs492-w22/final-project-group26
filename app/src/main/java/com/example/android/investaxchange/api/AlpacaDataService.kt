@@ -2,7 +2,6 @@ package com.example.android.investaxchange.api
 
 import com.example.android.investaxchange.BuildConfig
 import com.example.android.investaxchange.data.Snapshot
-import com.example.android.investaxchange.data.UserAccountResults
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
