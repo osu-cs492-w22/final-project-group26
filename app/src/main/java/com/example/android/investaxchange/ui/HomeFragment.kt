@@ -55,11 +55,12 @@ class HomeFragment : Fragment(R.layout.home) {
                     viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
                         if (searchResult != null) {
                             val mapData: Map< Long, Float> =
-                                searchResult!!.timeStamp
+                                searchResult.timeStamp
                                     .zip(searchResult.equity)
                                     .toMap()
-                            val histogramData: List<HistogramData> = mapData.map {
-                                //val date = Date(it.key)
+                            val histogramData: List<HistogramData> = mapData.filter {
+                                it.value != null
+                            }.map {
                                 val date = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
                                 date.timeInMillis = it.key * 1000L
                                 HistogramData(Time.Utc.fromDate(date.time), it.value)
@@ -75,7 +76,7 @@ class HomeFragment : Fragment(R.layout.home) {
                                     series.setData(histogramData) //histogramSeries =
                                 }
                             )
-                            view.findViewById<TextView>(R.id.portfolio_value).text = "$${searchResult.equity.last().toString()}"
+                            view.findViewById<TextView>(R.id.portfolio_value).text = "$${searchResult.equity.last()}"
                         }
                         else {
                             view.findViewById<TextView>(R.id.portfolio_value).text = "Loading..."
@@ -91,7 +92,7 @@ class HomeFragment : Fragment(R.layout.home) {
         }
 
 
-        viewModel.loadAccountResult("1M", "1H")
+        viewModel.loadAccountResult("3M", "1D")
 
         //val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
