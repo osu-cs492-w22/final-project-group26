@@ -24,7 +24,6 @@ class AlpacaAssetsViewModel : ViewModel() {
         viewModelScope.launch {
             _loadingStatus.value = LoadingStatus.LOADING
             val result = repository.loadAssets()
-            println(result)
             _searchResults.value = result.getOrNull()
             _loadingStatus.value = when (result.isSuccess) {
                 true ->  LoadingStatus.SUCCESS

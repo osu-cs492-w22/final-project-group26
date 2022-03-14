@@ -40,8 +40,6 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
 
         setHasOptionsMenu(true)
 
-        Log.d("RepoDetailFragment", "args.asset: ${args.asset}")
-
         view.findViewById<TextView>(R.id.tv_repo_name).text = args.asset.symbol
         view.findViewById<TextView>(R.id.tv_repo_description).text = args.asset.name
 
@@ -61,9 +59,6 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
                 is ChartsView.State.Ready -> {
                     barsViewModel.bars.observe(viewLifecycleOwner) {
                         if (it != null) {
-                            val firstTime = it[0].time
-                            println(firstTime)
-
                             val data = it.map { bar ->
                                 val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                                 val date: Date = format.parse(bar.time)
@@ -82,8 +77,6 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
                                     series.setData(data)
                                 }
                             )
-
-                            Log.d("HomeFragment", data.toString())
                         }
                     }
 
