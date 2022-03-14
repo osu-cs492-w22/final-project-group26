@@ -42,6 +42,7 @@ class MarketFragment : Fragment(R.layout.market) {
 
         viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
             assetListAdapter.updateAssetList(searchResults)
+            assetListAdapter.filter(searchBoxET.text.toString())
         }
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->

@@ -13,8 +13,14 @@ class AssetListAdapter(private val onAssetClick: (Asset) -> Unit)
     var assetList = mutableListOf<Asset>()
     var baseAssetList = listOf<Asset>()
 
+    // Allowed exchanges
+    val exchanges = listOf("NASDAQ", "NYSE")
+
     fun updateAssetList(newAssetList: List<Asset>?) {
-        baseAssetList = newAssetList ?: listOf()
+        baseAssetList = (newAssetList ?: listOf()).filter {
+            exchanges.contains(it.exchange) && it.status == "active" && it.symbol.isNotEmpty() && it.name.isNotEmpty()
+        }.sortedBy { it.symbol }
+
         assetList = baseAssetList.toMutableList()
         notifyDataSetChanged()
     }

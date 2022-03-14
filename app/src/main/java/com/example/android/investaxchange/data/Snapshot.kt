@@ -37,7 +37,7 @@ data class Trade(
     val conditions: List<String>,
 
     @Json(name = "i")
-    val id: Int,
+    val id: Long,
 
     @Json(name = "z")
     val tape: String,
