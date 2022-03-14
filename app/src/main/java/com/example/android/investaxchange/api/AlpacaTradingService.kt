@@ -24,7 +24,8 @@ interface AlpacaTradingService {
     @GET("/v2/account/portfolio/history")
     suspend fun getPortfolioHistory(
         @Query("period") period: String,
-        @Query("timeframe") timeframe: String) : PortfolioHistory
+        @Query("timeframe") timeframe: String,
+        @Query("extended_hours") extended_hours: Boolean) : PortfolioHistory
 
     companion object {
         private const val BASE_URL = "https://paper-api.alpaca.markets/"
