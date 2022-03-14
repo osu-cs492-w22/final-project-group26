@@ -6,17 +6,6 @@
     app:startDestination="@id/home">
 
     <fragment
-        android:id="@+id/repo_detail"
-        android:name="com.example.android.investaxchange.ui.RepoDetailFragment"
-        android:label="@string/label_home">
-        <argument
-            android:name="repo"
-            app:argType="com.example.android.investaxchange.data.GitHubRepo" />
-        <argument
-            android:name="intVal"
-            app:argType="integer" />
-    </fragment>
-    <fragment
         android:id="@+id/market"
         android:name="com.example.android.investaxchange.ui.MarketFragment"
         android:label="@string/label_market" >
@@ -29,7 +18,28 @@
         <action
             android:id="@+id/navigate_to_settings"
             app:destination="@id/settings" />
+        <action
+            android:id="@+id/navigate_to_market_detail"
+            app:destination="@id/market_detail" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/market_detail"
+        android:name="com.example.android.investaxchange.ui.MarketDetailFragment"
+        android:label="@string/label_market_detail" >
+        <argument
+            android:name="asset"
+            app:argType="com.example.android.investaxchange.data.Asset" />
+
+        <action
+            android:id="@+id/navigate_to_favorite"
+            app:destination="@id/favorite" />
+        <action
+            android:id="@+id/navigate_to_home"
+            app:destination="@id/home" />
+        <action
+            android:id="@+id/navigate_to_settings"
+            app:destination="@id/settings" />
     </fragment>
 
     <fragment
@@ -75,7 +85,6 @@
         <action
             android:id="@+id/navigate_to_home"
             app:destination="@id/home" />
-
     </fragment>
 
 </navigation>

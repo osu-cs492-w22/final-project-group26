@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
@@ -18,7 +19,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 class MarketFragment : Fragment(R.layout.market) {
     private val TAG = "MarketFragment"
 
-    private val repoListAdapter = AssetListAdapter(::onAssetClick)
+    private val assetListAdapter = AssetListAdapter(::onAssetClick)
     private val viewModel: AlpacaAssetsViewModel by viewModels()
 
     private lateinit var searchBoxET: EditText
@@ -37,10 +38,10 @@ class MarketFragment : Fragment(R.layout.market) {
         searchResultsListRV.layoutManager = LinearLayoutManager(requireContext())
         searchResultsListRV.setHasFixedSize(true)
 
-        searchResultsListRV.adapter = repoListAdapter
+        searchResultsListRV.adapter = assetListAdapter
 
         viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
-            repoListAdapter.updateAssetList(searchResults)
+            assetListAdapter.updateAssetList(searchResults)
         }
 
         viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
@@ -67,7 +68,7 @@ class MarketFragment : Fragment(R.layout.market) {
 
         searchBoxET.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                repoListAdapter.filter(s.toString())
+                assetListAdapter.filter(s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -79,7 +80,7 @@ class MarketFragment : Fragment(R.layout.market) {
     }
 
     private fun onAssetClick(asset: Asset) {
-//        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo, 16)
-//        findNavController().navigate(directions)
+        val directions = MarketFragmentDirections.navigateToMarketDetail(asset)
+        findNavController().navigate(directions)
     }
 }

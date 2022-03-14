@@ -6,37 +6,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.investaxchange.api.AlpacaDataService
 import com.example.android.investaxchange.api.AlpacaTradingService
-import com.example.android.investaxchange.data.*
+import com.example.android.investaxchange.data.AlpacaRepository
+import com.example.android.investaxchange.data.LoadingStatus
+import com.example.android.investaxchange.data.Snapshot
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
-class AlpacaAssetBarsViewModel : ViewModel() {
+class AlpacaAssetSnapshotViewModel : ViewModel() {
     private val repository = AlpacaRepository(AlpacaDataService.create(), AlpacaTradingService.create())
 
-    private val _bars = MutableLiveData<List<Bar>?>(null)
-    val bars: LiveData<List<Bar>?> = _bars
+    private val _snapshot = MutableLiveData<Snapshot?>(null)
+    val snapshot: LiveData<Snapshot?> = _snapshot
 
     private val _loadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
     val loadingStatus: LiveData<LoadingStatus> = _loadingStatus
 
-    fun loadBars(symbol: String, days: Int) {
+    fun loadSnapshot(symbol: String) {
         viewModelScope.launch {
-            val endMillis = System.currentTimeMillis() - 15 * 60 * 1000L;
-            val startMillis = endMillis - days * 24 * 60 * 60 * 1000L;
-
-            val endDate = Date(endMillis);
-            val startDate = Date(startMillis)
-
-            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-            sdf.timeZone = TimeZone.getTimeZone("GMT")
-
-            val endTime = sdf.format(endDate)
-            val startTime = sdf.format(startDate)
-
             _loadingStatus.value = LoadingStatus.LOADING
-            val result = repository.loadBars(symbol, startTime, endTime)
-            _bars.value = result.getOrNull()?.bars
+            val result = repository.loadSnapshot(symbol)
+            _snapshot.value = result.getOrNull()
             _loadingStatus.value = when (result.isSuccess) {
                 true ->  LoadingStatus.SUCCESS
                 false -> LoadingStatus.ERROR

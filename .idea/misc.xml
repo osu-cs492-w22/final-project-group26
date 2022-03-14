@@ -23,9 +23,14 @@
         <entry key="app/src/main/res/layout/favorite.xml" value="0.2667572463768116" />
         <entry key="app/src/main/res/layout/github_repo_list_item.xml" value="0.2667572463768116" />
         <entry key="app/src/main/res/layout/github_search.xml" value="0.2667572463768116" />
+        <entry key="app/src/main/res/layout/home.xml" value="0.2966485507246377" />
         <entry key="app/src/main/res/layout/market.xml" value="0.2667572463768116" />
+        <entry key="app/src/main/res/layout/market_detail.xml" value="0.2966485507246377" />
         <entry key="app/src/main/res/layout/market_list_item.xml" value="0.2667572463768116" />
         <entry key="app/src/main/res/layout/repo_detail.xml" value="0.1992936427850656" />
+        <entry key="app/src/main/res/menu/activity_market_detail.xml" value="0.43385416666666665" />
+        <entry key="app/src/main/res/menu/activity_repo_detail.xml" value="0.559375" />
+        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.559375" />
       </map>
     </option>
   </component>
