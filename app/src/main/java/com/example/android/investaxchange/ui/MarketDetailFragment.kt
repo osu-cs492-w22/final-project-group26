@@ -26,7 +26,6 @@ import com.tradingview.lightweightcharts.view.ChartsView
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class MarketDetailFragment : Fragment(R.layout.market_detail) {
     private val args: MarketDetailFragmentArgs by navArgs()
 
@@ -40,16 +39,16 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
 
         setHasOptionsMenu(true)
 
-        view.findViewById<TextView>(R.id.tv_repo_name).text = args.asset.symbol
-        view.findViewById<TextView>(R.id.tv_repo_description).text = args.asset.name
+        view.findViewById<TextView>(R.id.tv_market_name).text = args.asset.symbol
+        view.findViewById<TextView>(R.id.tv_market_description).text = args.asset.name
 
         barsViewModel.loadBars(args.asset.symbol, 30)
         snapshotViewModel.loadSnapshot(args.asset.symbol)
         snapshotViewModel.snapshot.observe(viewLifecycleOwner) {
             if (it?.latestTrade?.price == null) {
-                view.findViewById<TextView>(R.id.tv_repo_stars).text = "Loading..."
+                view.findViewById<TextView>(R.id.tv_market_price).text = "Loading..."
             } else {
-                view.findViewById<TextView>(R.id.tv_repo_stars).text = "$${it.latestTrade.price}"
+                view.findViewById<TextView>(R.id.tv_market_price).text = "$${String.format("%.2f", it.latestTrade.price)}"
             }
         }
 
@@ -98,14 +97,14 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.action_share -> {
-                shareRepo()
+                shareMarketDetail()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun shareRepo() {
+    private fun shareMarketDetail() {
         val price = snapshotViewModel.snapshot.value?.latestTrade?.price ?: 0
 
         val text = getString(R.string.share_text, args.asset.symbol, String.format("%.2f", price.toDouble()))

@@ -76,7 +76,7 @@ class HomeFragment : Fragment(R.layout.home) {
                             }
 
                             series.setData(histogramData)
-                            view.findViewById<TextView>(R.id.portfolio_value).text = "$${searchResult.equity.last()}"
+                            view.findViewById<TextView>(R.id.portfolio_value).text = "$${String.format("%.2f", searchResult.equity.last())}"
                         }
                         else {
                             view.findViewById<TextView>(R.id.portfolio_value).text = "Loading..."
