@@ -36,12 +36,20 @@ class HomeFragment : Fragment(R.layout.home) {
     private val viewModel: AlpacaPortfolioViewModel by viewModels()
     private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
 
-
-    lateinit var histogramSeries: SeriesApi
+    private lateinit var series: SeriesApi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        chartsView.api.addAreaSeries(
+            AreaSeriesOptions(
+                topColor = "rgba(33, 150, 243, 0.56)".toIntColor(),
+                bottomColor = "rgba(33, 150, 243, 0.04)".toIntColor(),
+                lineColor = "rgba(33, 150, 243, 1)".toIntColor(),
+                lineWidth = LineWidth.FOUR
+            ),
+            onSeriesCreated = { series = it }
+        )
 
         /*
         *
@@ -58,6 +66,7 @@ class HomeFragment : Fragment(R.layout.home) {
                                 searchResult.timeStamp
                                     .zip(searchResult.equity)
                                     .toMap()
+
                             val histogramData: List<HistogramData> = mapData.filter {
                                 it.value != null
                             }.map {
@@ -65,17 +74,8 @@ class HomeFragment : Fragment(R.layout.home) {
                                 date.timeInMillis = it.key * 1000L
                                 HistogramData(Time.Utc.fromDate(date.time), it.value)
                             }
-                            chartsView.api.addAreaSeries(
-                                AreaSeriesOptions(
-                                    topColor = "rgba(33, 150, 243, 0.56)".toIntColor(),
-                                    bottomColor = "rgba(33, 150, 243, 0.04)".toIntColor(),
-                                    lineColor = "rgba(33, 150, 243, 1)".toIntColor(),
-                                    lineWidth = LineWidth.FOUR
-                                ),
-                                onSeriesCreated = { series ->
-                                    series.setData(histogramData) //histogramSeries =
-                                }
-                            )
+
+                            series.setData(histogramData)
                             view.findViewById<TextView>(R.id.portfolio_value).text = "$${searchResult.equity.last()}"
                         }
                         else {
