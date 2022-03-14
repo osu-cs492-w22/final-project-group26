@@ -8,6 +8,14 @@
     android:orientation="vertical"
     tools:context=".ui.HomeFragment">
 
+    <TextView
+        android:id="@+id/portfolio_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:drawablePadding="8dp"
+        android:layout_marginStart="12dp"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

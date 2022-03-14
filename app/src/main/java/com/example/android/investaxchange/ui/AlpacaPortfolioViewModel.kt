@@ -19,17 +19,16 @@ class AlpacaPortfolioViewModel : ViewModel() {
     private val _loadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
 //    val loadingStatus: LiveData<LoadingStatus> = _loadingStatus
 
-    fun loadAccountResult() {
+    fun loadAccountResult(period: String = "1M", timeframe: String = "1D") {
         viewModelScope.launch {
 
             _loadingStatus.value = LoadingStatus.LOADING
-            val result = repository.loadPortfolioHistory("1D", "1H")
-            //Log.d("PortfolioModel", result.toString())
+            val result = repository.loadPortfolioHistory(period, timeframe)
             _searchResults.value = result.getOrNull()
-//            _loadingStatus.value = when (result.isSuccess) {
-//                true ->  LoadingStatus.SUCCESS
-//                false -> LoadingStatus.ERROR
-//            }
+            _loadingStatus.value = when (result.isSuccess) {
+                true ->  LoadingStatus.SUCCESS
+                false -> LoadingStatus.ERROR
+            }
         }
     }
 }

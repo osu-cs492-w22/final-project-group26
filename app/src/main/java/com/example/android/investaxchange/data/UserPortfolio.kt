@@ -9,10 +9,10 @@ import java.io.Serializable
 data class PortfolioHistory(
     @Json(name = "timestamp")
     @PrimaryKey
-    val timeStamp: List<Int>,
+    val timeStamp: List<Long>,
 
     @Json(name = "equity")
-    val equity: List<Double>,
+    val equity: List<Float>,
 
     @Json(name = "profit_loss")
     val profit_loss: List<Double>,

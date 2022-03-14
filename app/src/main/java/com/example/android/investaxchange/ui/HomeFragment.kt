@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.android.investaxchange.R
@@ -25,6 +26,8 @@ import com.tradingview.lightweightcharts.runtime.plugins.DateTimeFormat
 import com.tradingview.lightweightcharts.runtime.plugins.PriceFormatter
 import com.tradingview.lightweightcharts.runtime.plugins.TimeFormatter
 import com.tradingview.lightweightcharts.view.ChartsView
+import java.text.SimpleDateFormat
+import java.util.*
 
 class HomeFragment : Fragment(R.layout.home) {
     private val TAG = "HomeFragment"
@@ -45,43 +48,38 @@ class HomeFragment : Fragment(R.layout.home) {
         * Creates a chart with newly updated results from portfolio
         *
         */
-        // TODO: Convert portfolio data into SeriesApi data
         chartsView.subscribeOnChartStateChange { state ->
             when (state) {
                 is ChartsView.State.Preparing -> Unit
                 is ChartsView.State.Ready -> {
                     viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
-                        val data = listOf(
-                            HistogramData(Time.BusinessDay(2019, 6, 11), 40.01f),
-                            HistogramData(Time.BusinessDay(2019, 6, 12), 52.38f),
-                            HistogramData(Time.BusinessDay(2019, 6, 13), 36.30f),
-                            HistogramData(Time.BusinessDay(2019, 6, 14), 34.48f),
-                            WhitespaceData(Time.BusinessDay(2019, 6, 15)),
-                            WhitespaceData(Time.BusinessDay(2019, 6, 16)),
-                            HistogramData(Time.BusinessDay(2019, 6, 17), 41.50f),
-                            HistogramData(Time.BusinessDay(2019, 6, 18), 34.82f)
-                        )
-                        chartsView.api.addAreaSeries(
-                            AreaSeriesOptions(
-                                topColor = "rgba(33, 150, 243, 0.56)".toIntColor(),
-                                bottomColor = "rgba(33, 150, 243, 0.04)".toIntColor(),
-                                lineColor = "rgba(33, 150, 243, 1)".toIntColor(),
-                                lineWidth = LineWidth.FOUR
-                            ),
-                            onSeriesCreated = { series ->
-                                series.setData(data) //histogramSeries =
-                            }
-                        )
                         if (searchResult != null) {
-                            val map: Map<Int, Double> =
+                            val mapData: Map< Long, Float> =
                                 searchResult!!.timeStamp
-                                    .zip(searchResult.profit_loss)
+                                    .zip(searchResult.equity)
                                     .toMap()
-                            Log.d("HomeFragment", map.toString())
+                            val histogramData: List<HistogramData> = mapData.map {
+                                //val date = Date(it.key)
+                                val date = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                                date.timeInMillis = it.key * 1000L
+                                HistogramData(Time.Utc.fromDate(date.time), it.value)
+                            }
+                            chartsView.api.addAreaSeries(
+                                AreaSeriesOptions(
+                                    topColor = "rgba(33, 150, 243, 0.56)".toIntColor(),
+                                    bottomColor = "rgba(33, 150, 243, 0.04)".toIntColor(),
+                                    lineColor = "rgba(33, 150, 243, 1)".toIntColor(),
+                                    lineWidth = LineWidth.FOUR
+                                ),
+                                onSeriesCreated = { series ->
+                                    series.setData(histogramData) //histogramSeries =
+                                }
+                            )
+                            view.findViewById<TextView>(R.id.portfolio_value).text = "$${searchResult.equity.last().toString()}"
                         }
-
-//                       onSeriesCreated = { series -> series.setData(data.list) }
-
+                        else {
+                            view.findViewById<TextView>(R.id.portfolio_value).text = "Loading..."
+                        }
                     }
 
                     applyChartOptions()
@@ -93,7 +91,7 @@ class HomeFragment : Fragment(R.layout.home) {
         }
 
 
-
+        viewModel.loadAccountResult("1M", "1H")
 
         //val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
@@ -114,8 +112,8 @@ class HomeFragment : Fragment(R.layout.home) {
         chartsView.api.applyOptions {
             handleScale = handleScaleOptions {
                 kineticScroll = kineticScrollOptions {
-                    touch = false
-                    mouse = false
+                    touch = true
+                    mouse = true
                 }
             }
             layout = layoutOptions {
@@ -135,7 +133,7 @@ class HomeFragment : Fragment(R.layout.home) {
             timeScale = timeScaleOptions {
                 fixRightEdge = true
                 borderColor = Color.argb(255, 197, 203, 206).toIntColor()
-                minBarSpacing = 65.0f
+                minBarSpacing = 25.0f
             }
             trackingMode = TrackingModeOptions(exitMode = TrackingModeExitMode.ON_TOUCH_END)
         }
