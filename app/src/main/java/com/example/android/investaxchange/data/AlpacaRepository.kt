@@ -52,10 +52,10 @@ class AlpacaRepository(
             }
         }
 
-    suspend fun loadPortfolioHistory(period: String, timeframe: String): Result<PortfolioHistory> =
+    suspend fun loadPortfolioHistory(period: String, timeframe: String, extendedHours: Boolean): Result<PortfolioHistory> =
         withContext(ioDispatcher) {
             try {
-                val results = tradingService.getPortfolioHistory(period, timeframe)
+                val results = tradingService.getPortfolioHistory(period, timeframe, extendedHours)
                 Result.success(results)
             } catch (e: Exception) {
                 Result.failure(e)

@@ -84,6 +84,7 @@ class HomeFragment : Fragment(R.layout.home) {
                     }
 
                     applyChartOptions()
+                    viewModel.loadAccountResult("1D", "15Min", true)
                 }
                 is ChartsView.State.Error -> {
                     Log.d("HomeFragment", state.exception.message ?: "")
@@ -92,15 +93,21 @@ class HomeFragment : Fragment(R.layout.home) {
         }
 
 
-        viewModel.loadAccountResult("3M", "1D")
+
 
         //val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
-        val searchBtn: Button = view.findViewById(R.id.btn_search_home)
-        searchBtn.setOnClickListener {
-            //viewModel.loadAccountResult()
-
-            //histogramSeries.setData(data)
+        val searchBtn1: Button = view.findViewById(R.id.home_chart_Day)
+        searchBtn1.setOnClickListener {
+            viewModel.loadAccountResult("1D", "15Min", true)
+        }
+        val searchBtn2: Button = view.findViewById(R.id.home_chart_Week)
+        searchBtn2.setOnClickListener {
+            viewModel.loadAccountResult("1W", "1H", true)
+        }
+        val searchBtn3: Button = view.findViewById(R.id.home_chart_Month)
+        searchBtn3.setOnClickListener {
+            viewModel.loadAccountResult("1M", "1D", true)
         }
     }
 
@@ -117,6 +124,11 @@ class HomeFragment : Fragment(R.layout.home) {
                     mouse = true
                 }
             }
+            handleScroll = handleScrollOptions {
+                mouseWheel = true
+                pressedMouseMove = true
+                horzTouchDrag = true
+            }
             layout = layoutOptions {
                 background = SolidColor(Color.WHITE)
                 textColor = Color.argb(255, 33, 56, 77).toIntColor()
@@ -132,9 +144,10 @@ class HomeFragment : Fragment(R.layout.home) {
                 borderColor = Color.argb(255, 197, 203, 206).toIntColor()
             }
             timeScale = timeScaleOptions {
-                fixRightEdge = true
+                //fixRightEdge = true
                 borderColor = Color.argb(255, 197, 203, 206).toIntColor()
-                minBarSpacing = 25.0f
+                barSpacing = 50.0f
+                minBarSpacing = 6.0f
             }
             trackingMode = TrackingModeOptions(exitMode = TrackingModeExitMode.ON_TOUCH_END)
         }
