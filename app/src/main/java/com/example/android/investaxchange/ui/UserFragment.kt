@@ -2,6 +2,7 @@ package com.example.android.investaxchange.ui
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,6 +34,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
     private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
 
+    private lateinit var scrollView: ScrollView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -40,6 +43,10 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         anyChartPie = view.findViewById(R.id.any_chart_pie)
         tvAccountNumber = view.findViewById(R.id.tv_user_account_number)
         tvCreatedAt = view.findViewById(R.id.tv_user_created_at)
+
+        searchErrorTV = view.findViewById(R.id.tv_search_error)
+        loadingIndicator = view.findViewById(R.id.loading_indicator)
+        scrollView = view.findViewById(R.id.scroll_view)
 
         viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
             searchResults?.let {
@@ -49,9 +56,30 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 setupPieChart(searchResults!!)
             }
         }
+
+        viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                LoadingStatus.LOADING -> {
+                    loadingIndicator.visibility = View.VISIBLE
+                    scrollView.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.INVISIBLE
+                }
+                LoadingStatus.ERROR -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    scrollView.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.VISIBLE
+                }
+                else -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    scrollView.visibility = View.VISIBLE
+                    searchErrorTV.visibility = View.INVISIBLE
+                }
+            }
+        }
         viewModel.loadAccountResult();
     }
 
+    //Referenced from https://github.com/AnyChart/AnyChart-Android/blob/master/sample/src/main/java/com/anychart/sample/charts/ColumnChartActivity.java
     private fun setupBarChart(searchResults: UserAccount) {
         APIlib.getInstance().setActiveAnyChartView(anyChartBar)
         val cartesian = AnyChart.column()
@@ -84,6 +112,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         anyChartBar.setChart(cartesian);
     }
 
+    //Referenced from: https://github.com/AnyChart/AnyChart-Android/blob/master/sample/src/main/java/com/anychart/sample/charts/PieChartActivity.java
     private fun setupPieChart(searchResults: UserAccount) {
         APIlib.getInstance().setActiveAnyChartView(anyChartPie)
         val pie = AnyChart.pie()
