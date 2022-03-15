@@ -1,11 +1,13 @@
 package com.example.android.investaxchange.ui
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.view.SupportActionModeWrapper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -26,7 +28,10 @@ class MarketFragment : Fragment(R.layout.market) {
     private lateinit var searchResultsListRV: RecyclerView
     private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

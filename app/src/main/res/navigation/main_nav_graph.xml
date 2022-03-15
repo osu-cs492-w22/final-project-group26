@@ -10,15 +10,6 @@
         android:name="com.example.android.investaxchange.ui.MarketFragment"
         android:label="@string/label_market" >
         <action
-            android:id="@+id/navigate_to_favorite"
-            app:destination="@id/favorite" />
-        <action
-            android:id="@+id/navigate_to_home"
-            app:destination="@id/home" />
-        <action
-            android:id="@+id/navigate_to_settings"
-            app:destination="@id/settings" />
-        <action
             android:id="@+id/navigate_to_market_detail"
             app:destination="@id/market_detail" />
     </fragment>
@@ -30,61 +21,24 @@
         <argument
             android:name="asset"
             app:argType="com.example.android.investaxchange.data.Asset" />
-
-        <action
-            android:id="@+id/navigate_to_favorite"
-            app:destination="@id/favorite" />
-        <action
-            android:id="@+id/navigate_to_home"
-            app:destination="@id/home" />
-        <action
-            android:id="@+id/navigate_to_settings"
-            app:destination="@id/settings" />
     </fragment>
 
     <fragment
         android:id="@+id/favorite"
         android:name="com.example.android.investaxchange.ui.FavoriteFragment"
         android:label="@string/label_favorite" >
-        <action
-            android:id="@+id/navigate_to_market"
-            app:destination="@id/market" />
-        <action
-            android:id="@+id/navigate_to_home"
-            app:destination="@id/home" />
-        <action
-            android:id="@+id/navigate_to_settings"
-            app:destination="@id/settings" />
     </fragment>
 
     <fragment
         android:id="@+id/home"
         android:name="com.example.android.investaxchange.ui.HomeFragment"
         android:label="@string/label_home">
-        <action
-            android:id="@+id/navigate_to_favorite"
-            app:destination="@id/favorite" />
-        <action
-            android:id="@+id/navigate_to_market"
-            app:destination="@id/market" />
-        <action
-            android:id="@+id/navigate_to_settings"
-            app:destination="@id/settings" />
     </fragment>
 
     <fragment
         android:id="@+id/settings"
         android:name="com.example.android.investaxchange.ui.SettingsFragment"
         android:label="@string/label_settings" >
-        <action
-            android:id="@+id/navigate_to_favorite"
-            app:destination="@id/favorite" />
-        <action
-            android:id="@+id/navigate_to_market"
-            app:destination="@id/market" />
-        <action
-            android:id="@+id/navigate_to_home"
-            app:destination="@id/home" />
     </fragment>
 
 </navigation>
