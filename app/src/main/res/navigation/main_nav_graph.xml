@@ -50,7 +50,7 @@
     <fragment
         android:id="@+id/user"
         android:name="com.example.android.investaxchange.ui.UserFragment"
-        android:label="@string/label_user">
+        android:label="@string/label_user_info">
     </fragment>
 
 

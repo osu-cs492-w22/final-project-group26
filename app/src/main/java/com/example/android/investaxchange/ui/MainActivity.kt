@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         val navView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val appBarConfiguration: AppBarConfiguration =
-            AppBarConfiguration.Builder(R.id.favorite, R.id.market, R.id.home, R.id.settings).build()
+            AppBarConfiguration.Builder(R.id.favorite, R.id.market, R.id.home, R.id.settings, R.id.user).build()
 
         setupActionBarWithNavController(this, navController, appBarConfiguration)
         setupWithNavController(navView, navController)
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.home -> View.VISIBLE
                     R.id.favorite -> View.VISIBLE
                     R.id.settings -> View.VISIBLE
+                    R.id.user -> View.VISIBLE
                     else -> View.GONE
                 }
         }
