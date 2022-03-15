@@ -53,6 +53,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     ksp 'androidx.room:room-compiler:2.4.2'
 
@@ -67,6 +68,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.14.0'
 
     implementation 'com.tradingview:lightweightcharts:3.8.0'
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

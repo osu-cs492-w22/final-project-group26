@@ -71,6 +71,17 @@ class AlpacaRepository(
                 Result.failure(e)
             }
         }
+
+    suspend fun loadUserAccount(): Result<UserAccount> =
+        withContext(ioDispatcher) {
+            try {
+                val results = tradingService.getUserAccount()
+                Result.success(results)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
 //    private fun buildAccountQuery(
 //        query: String,
 //        user: String?,
