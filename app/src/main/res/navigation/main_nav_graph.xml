@@ -33,6 +33,18 @@
         android:id="@+id/home"
         android:name="com.example.android.investaxchange.ui.HomeFragment"
         android:label="@string/label_home">
+        <action
+            android:id="@+id/navigate_to_portfolio_asset_detail"
+            app:destination="@id/portfolio_asset_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/portfolio_asset_detail"
+        android:name="com.example.android.investaxchange.ui.HomeFragment"
+        android:label="@string/label_portfolio_asset_detail">
+        <argument
+            android:name="portfolioAsset"
+            app:argType="com.example.android.investaxchange.data.PortfolioAssets" />
     </fragment>
 
     <fragment

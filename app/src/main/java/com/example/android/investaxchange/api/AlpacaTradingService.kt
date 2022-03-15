@@ -2,6 +2,7 @@ package com.example.android.investaxchange.api
 
 import com.example.android.investaxchange.BuildConfig
 import com.example.android.investaxchange.data.Asset
+import com.example.android.investaxchange.data.PortfolioAssets
 import com.example.android.investaxchange.data.PortfolioHistory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -17,6 +18,13 @@ interface AlpacaTradingService {
      */
     @GET("v2/assets")
     suspend fun getAssets() : List<Asset>
+
+    /**
+     * Get list of stocks account currently owns
+     */
+
+    @GET("v2/positions")
+    suspend fun getPortfolioAssets() : List<PortfolioAssets>
 
     /**
      * Get lists with data for portfolio history.

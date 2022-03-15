@@ -5,37 +5,41 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
 import com.example.android.investaxchange.data.GitHubRepo
+import com.example.android.investaxchange.data.LoadingStatus
+import com.example.android.investaxchange.data.PortfolioAssets
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.tradingview.lightweightcharts.api.chart.models.color.surface.SolidColor
 import com.tradingview.lightweightcharts.api.chart.models.color.toIntColor
 import com.tradingview.lightweightcharts.api.interfaces.SeriesApi
 import com.tradingview.lightweightcharts.api.options.enums.TrackingModeExitMode
 import com.tradingview.lightweightcharts.api.options.models.*
 import com.tradingview.lightweightcharts.api.series.enums.CrosshairMode
-import com.tradingview.lightweightcharts.api.series.enums.LastPriceAnimationMode
 import com.tradingview.lightweightcharts.api.series.enums.LineWidth
 import com.tradingview.lightweightcharts.api.series.models.HistogramData
-import com.tradingview.lightweightcharts.api.series.models.PriceScaleId
 import com.tradingview.lightweightcharts.api.series.models.Time
-import com.tradingview.lightweightcharts.api.series.models.WhitespaceData
-import com.tradingview.lightweightcharts.runtime.plugins.DateTimeFormat
-import com.tradingview.lightweightcharts.runtime.plugins.PriceFormatter
-import com.tradingview.lightweightcharts.runtime.plugins.TimeFormatter
 import com.tradingview.lightweightcharts.view.ChartsView
-import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeFragment : Fragment(R.layout.home) {
     private val TAG = "HomeFragment"
 
-//    private val repoListAdapter = GitHubRepoListAdapter(::onGitHubRepoClick)
+    private val portfolioAssetListAdapter = PortfolioAssetListAdapter(::onPorfolioAssetClick)
     private val viewModel: AlpacaPortfolioViewModel by viewModels()
+    private val viewModel2: AlpacaPortfolioAssetsViewModel by viewModels()
     private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
 
+    private lateinit var searchResultsListRV: RecyclerView
+    private lateinit var searchErrorTV: TextView
+    private lateinit var loadingIndicator: CircularProgressIndicator
     private lateinit var series: SeriesApi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,11 +96,6 @@ class HomeFragment : Fragment(R.layout.home) {
             }
         }
 
-
-
-
-        //val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-
         val searchBtn1: Button = view.findViewById(R.id.home_chart_Day)
         searchBtn1.setOnClickListener {
             viewModel.loadAccountResult("1D", "15Min", true)
@@ -109,11 +108,46 @@ class HomeFragment : Fragment(R.layout.home) {
         searchBtn3.setOnClickListener {
             viewModel.loadAccountResult("1M", "1D", true)
         }
+
+        searchResultsListRV = view.findViewById(R.id.rv_portfolio_asset_results)
+        searchErrorTV = view.findViewById(R.id.tv_portfolio_asset_error)
+        loadingIndicator = view.findViewById(R.id.portfolio_asset_loading_indicator)
+
+        searchResultsListRV.layoutManager = LinearLayoutManager(requireContext())
+        searchResultsListRV.setHasFixedSize(true)
+
+        searchResultsListRV.adapter = portfolioAssetListAdapter
+
+        viewModel2.portfolioAssets.observe(viewLifecycleOwner) { searchResults ->
+            portfolioAssetListAdapter.updateAssetList(searchResults)
+        }
+
+        viewModel2.loadingStatus.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                LoadingStatus.LOADING -> {
+                    loadingIndicator.visibility = View.VISIBLE
+                    searchResultsListRV.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.INVISIBLE
+                }
+                LoadingStatus.ERROR -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    searchResultsListRV.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.VISIBLE
+                }
+                else -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    searchResultsListRV.visibility = View.VISIBLE
+                    searchErrorTV.visibility = View.INVISIBLE
+                }
+            }
+        }
+
+        viewModel2.loadPortfolioAssets()
     }
 
-    private fun onGitHubRepoClick(repo: GitHubRepo) {
-//        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo, 16)
-//        findNavController().navigate(directions)
+    private fun onPorfolioAssetClick(portfolioAssets: PortfolioAssets) {
+        val directions = HomeFragmentDirections.navigateToPortfolioAssetDetail(portfolioAssets)
+        findNavController().navigate(directions)
     }
 
     private fun applyChartOptions() {
@@ -141,7 +175,7 @@ class HomeFragment : Fragment(R.layout.home) {
                     top = 0.35f,
                     bottom = 0.2f
                 )
-                borderColor = Color.argb(255, 197, 203, 206).toIntColor()
+                borderColor = Color.argb(0, 197, 203, 206).toIntColor()
             }
             timeScale = timeScaleOptions {
                 //fixRightEdge = true

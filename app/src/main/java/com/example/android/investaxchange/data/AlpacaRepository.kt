@@ -61,6 +61,16 @@ class AlpacaRepository(
                 Result.failure(e)
             }
         }
+
+    suspend fun loadPortfolioAssets(): Result<List<PortfolioAssets>> =
+        withContext(ioDispatcher) {
+            try {
+                val results = tradingService.getPortfolioAssets()
+                Result.success(results)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
 //    private fun buildAccountQuery(
 //        query: String,
 //        user: String?,
