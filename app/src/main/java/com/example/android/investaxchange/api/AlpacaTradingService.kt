@@ -3,6 +3,7 @@ package com.example.android.investaxchange.api
 import com.example.android.investaxchange.BuildConfig
 import com.example.android.investaxchange.data.Asset
 import com.example.android.investaxchange.data.PortfolioHistory
+import com.example.android.investaxchange.data.UserAccount
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -26,6 +27,12 @@ interface AlpacaTradingService {
         @Query("period") period: String,
         @Query("timeframe") timeframe: String,
         @Query("extended_hours") extended_hours: Boolean) : PortfolioHistory
+
+    /**
+     * Get information with data for User Account.
+     */
+    @GET("/v2/account")
+    suspend fun getUserAccount() : UserAccount
 
     companion object {
         private const val BASE_URL = "https://paper-api.alpaca.markets/"

@@ -10,6 +10,7 @@
     <string name="label_market_detail">Market Detail</string>
     <string name="label_home">Portfolio</string>
     <string name="label_settings">Settings</string>
+    <string name="label_user">Account Information</string>
 
     <string name="action_bookmark">Bookmark this repo</string>
     <string name="action_bookmarks">View bookmarks</string>
@@ -70,4 +71,6 @@
         <item quantity="one">%d language</item>
         <item quantity="other">%d languages</item>
     </plurals>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

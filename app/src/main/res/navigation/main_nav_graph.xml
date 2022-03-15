@@ -36,6 +36,13 @@
     </fragment>
 
     <fragment
+        android:id="@+id/user"
+        android:name="com.example.android.investaxchange.ui.UserFragment"
+        android:label="@string/label_user">
+    </fragment>
+
+
+    <fragment
         android:id="@+id/settings"
         android:name="com.example.android.investaxchange.ui.SettingsFragment"
         android:label="@string/label_settings" >
