@@ -121,15 +121,24 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
         buy50Button.setOnClickListener { orderViewModel.createOrder(getOrderRequest(50)) }
     }
 
-    private fun getOrderRequest(qty: Int) = OrderRequest(
-        symbol = args.asset.symbol,
-        qty = qty,
-        side = "buy",
-        type = "limit",
-        limitPrice = snapshotViewModel.snapshot.value?.latestTrade?.price?.times(1.03),
-        timeInForce = "day",
-        extendedHours = true,
-    )
+    private fun getOrderRequest(qty: Int): OrderRequest {
+        val basePrice = snapshotViewModel.snapshot.value?.latestTrade?.price ?: 0.0
+        val limitPrice = basePrice * when {
+            basePrice <= 25.00 -> 1.1
+            basePrice <= 50.00 -> 1.05
+            else -> 1.03
+        }
+
+        return OrderRequest(
+            symbol = args.asset.symbol,
+            qty = qty,
+            side = "buy",
+            type = "limit",
+            limitPrice = limitPrice,
+            timeInForce = "day",
+            extendedHours = true,
+        )
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.activity_market_detail, menu)
@@ -150,9 +159,11 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
                 if (item.isChecked) {
                     item.setIcon(R.drawable.ic_action_favorite_off)
                     item.isChecked = false
+                    favoriteViewModel.removeAsset(args.asset)
                 } else {
                     item.setIcon(R.drawable.ic_action_favorite_on)
                     item.isChecked = true
+                    favoriteViewModel.addAsset(args.asset)
                 }
                 true
             }
