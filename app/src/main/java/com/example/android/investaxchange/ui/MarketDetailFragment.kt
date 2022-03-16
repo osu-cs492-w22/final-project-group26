@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -15,6 +16,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 import com.example.android.investaxchange.R
+import com.example.android.investaxchange.data.OrderRequest
+import com.google.android.material.snackbar.Snackbar
 import com.tradingview.lightweightcharts.api.chart.models.color.surface.SolidColor
 import com.tradingview.lightweightcharts.api.chart.models.color.toIntColor
 import com.tradingview.lightweightcharts.api.options.enums.TrackingModeExitMode
@@ -26,12 +29,14 @@ import com.tradingview.lightweightcharts.api.series.models.Time
 import com.tradingview.lightweightcharts.view.ChartsView
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 class MarketDetailFragment : Fragment(R.layout.market_detail) {
     private val args: MarketDetailFragmentArgs by navArgs()
 
     private val barsViewModel: AlpacaAssetBarsViewModel by viewModels()
     private val snapshotViewModel: AlpacaAssetSnapshotViewModel by viewModels()
+    private val orderViewModel: AlpacaOrderViewModel by viewModels()
 
     private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
 
@@ -98,7 +103,31 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
         }
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = args.asset.symbol
+
+        val buy1Button = view.findViewById<Button>(R.id.buy_1_button)
+        val buy10Button = view.findViewById<Button>(R.id.buy_10_button)
+        val buy50Button = view.findViewById<Button>(R.id.buy_50_button)
+
+        orderViewModel.order.observe(viewLifecycleOwner) {
+            if (it != null) {
+                val snackbar =
+                    Snackbar.make(requireView(), "Order ${it.id} submitted!", Snackbar.LENGTH_LONG)
+                snackbar.show()
+            }
+        }
+
+        buy1Button.setOnClickListener { orderViewModel.createOrder(getOrderRequest(1)) }
+        buy10Button.setOnClickListener { orderViewModel.createOrder(getOrderRequest(10)) }
+        buy50Button.setOnClickListener { orderViewModel.createOrder(getOrderRequest(50)) }
     }
+
+    private fun getOrderRequest(qty: Int) = OrderRequest(
+        symbol = args.asset.symbol,
+        qty = qty,
+        side = "buy",
+        type = "market",
+        timeInForce = "day",
+    )
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.activity_market_detail, menu)

@@ -46,4 +46,38 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buy_1_button"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_gravity="center"
+            android:text="Buy 1" />
+
+        <Button
+            android:id="@+id/buy_10_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_gravity="center"
+            android:text="Buy 10" />
+
+        <Button
+            android:id="@+id/buy_50_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_gravity="center"
+            android:text="Buy 50"/>
+
+    </LinearLayout>
+
 </LinearLayout>

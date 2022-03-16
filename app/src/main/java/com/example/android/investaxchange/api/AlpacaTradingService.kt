@@ -1,30 +1,28 @@
 package com.example.android.investaxchange.api
 
 import com.example.android.investaxchange.BuildConfig
-import com.example.android.investaxchange.data.Asset
-import com.example.android.investaxchange.data.PortfolioAssets
-import com.example.android.investaxchange.data.PortfolioHistory
-import com.example.android.investaxchange.data.UserAccount
+import com.example.android.investaxchange.data.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface AlpacaTradingService {
     /**
      * Get a list of available assets.
      */
-    @GET("v2/assets")
+    @GET("/v2/assets")
     suspend fun getAssets() : List<Asset>
 
     /**
      * Get list of stocks account currently owns
      */
-
-    @GET("v2/positions")
+    @GET("/v2/positions")
     suspend fun getPortfolioAssets() : List<PortfolioAssets>
 
     /**
@@ -41,6 +39,12 @@ interface AlpacaTradingService {
      */
     @GET("/v2/account")
     suspend fun getUserAccount() : UserAccount
+
+    /**
+     * Create a new order.
+     */
+    @POST("/v2/orders")
+    suspend fun createOrder(@Body order: OrderRequest) : Order
 
     companion object {
         private const val BASE_URL = "https://paper-api.alpaca.markets/"

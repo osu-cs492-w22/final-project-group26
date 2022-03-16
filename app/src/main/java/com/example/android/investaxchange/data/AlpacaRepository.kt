@@ -82,6 +82,18 @@ class AlpacaRepository(
             }
         }
 
+    suspend fun createOrder(order: OrderRequest): Result<Order> =
+        withContext(ioDispatcher) {
+            try {
+                val result = tradingService.createOrder(order)
+                println(result)
+                Result.success(result)
+            } catch (e: Exception) {
+                println(e)
+                Result.failure(e)
+            }
+        }
+
 //    private fun buildAccountQuery(
 //        query: String,
 //        user: String?,
