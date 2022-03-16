@@ -13,6 +13,8 @@ class AlpacaRepository(
     private val tradingService: AlpacaTradingService,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    private val TAG: String = "AlpacaRepository"
+
     suspend fun loadAssets(): Result<List<Asset>> =
         withContext(ioDispatcher) {
             try {
@@ -86,8 +88,28 @@ class AlpacaRepository(
         withContext(ioDispatcher) {
             try {
                 val results = tradingService.getWatchlists()
-                Log.d("Repository", results.toString())
                 Result.success(results.assets)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
+    suspend fun createFavoriteAsset(symbol: String) =
+        withContext(ioDispatcher) {
+            try {
+                val result = tradingService.createFavorite(newAsset(symbol))
+                Log.d(TAG, result.toString())
+                Result.success(result)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
+    suspend fun removeFavoriteAsset(symbol: String) =
+        withContext(ioDispatcher) {
+            try {
+                val result = tradingService.removeFavorite(symbol)
+                Result.success(result)
             } catch (e: Exception) {
                 Result.failure(e)
             }

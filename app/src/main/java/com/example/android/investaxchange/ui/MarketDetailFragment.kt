@@ -150,9 +150,11 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
                 if (item.isChecked) {
                     item.setIcon(R.drawable.ic_action_favorite_off)
                     item.isChecked = false
+                    favoriteViewModel.removeAsset(args.asset)
                 } else {
                     item.setIcon(R.drawable.ic_action_favorite_on)
                     item.isChecked = true
+                    favoriteViewModel.addAsset(args.asset)
                 }
                 true
             }
