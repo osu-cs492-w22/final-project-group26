@@ -1,20 +1,16 @@
 package com.example.android.investaxchange.ui
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.android.investaxchange.api.AlpacaDataService
 import com.example.android.investaxchange.api.AlpacaTradingService
-import com.example.android.investaxchange.data.AlpacaRepository
-import com.example.android.investaxchange.data.Asset
-import com.example.android.investaxchange.data.LoadingStatus
-import com.example.android.investaxchange.data.Watchlists
+import com.example.android.investaxchange.data.*
 import kotlinx.coroutines.launch
 
-class AlpacaFavoritesViewModel : ViewModel() {
+class AlpacaFavoritesViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = AlpacaRepository(AlpacaDataService.create(), AlpacaTradingService.create())
+    private val database = FavoriteAssets(AppDatabase.getInstance(getApplication()).assetDao())
 
     private val _watchlists = MutableLiveData<List<Asset>?>(null)
     val watchlists: LiveData<List<Asset>?> = _watchlists
@@ -33,5 +29,25 @@ class AlpacaFavoritesViewModel : ViewModel() {
                 false -> LoadingStatus.ERROR
             }
         }
+    }
+
+    fun addAsset(asset: Asset){
+        viewModelScope.launch {
+            database.insertAsset(asset)
+        }
+    }
+
+    fun removeAsset(asset: Asset){
+        viewModelScope.launch {
+            database.removeAsset(asset)
+        }
+    }
+
+    fun assetExists(assetId: String): Boolean {
+        var res: Boolean = false
+        viewModelScope.launch {
+            res = database.assetExists(assetId)
+        }
+        return res
     }
 }

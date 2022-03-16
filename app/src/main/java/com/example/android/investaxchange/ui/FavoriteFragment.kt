@@ -7,12 +7,12 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
 import com.example.android.investaxchange.data.Asset
 import com.example.android.investaxchange.data.LoadingStatus
-import com.example.android.investaxchange.data.Watchlists
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class FavoriteFragment : Fragment(R.layout.favorite) {
@@ -94,6 +94,11 @@ class FavoriteFragment : Fragment(R.layout.favorite) {
 */
         viewModel2.watchlists.observe(viewLifecycleOwner) { searchResults ->
             assetListAdapter.updateAssetList(searchResults)
+            if (searchResults != null) { // Add all assets to the database
+                for (x in searchResults) {
+                    viewModel2.addAsset(x)
+                }
+            }
         }
 
         viewModel2.loadingStatus.observe(viewLifecycleOwner) { uiState ->
@@ -120,6 +125,7 @@ class FavoriteFragment : Fragment(R.layout.favorite) {
     }
 
     private fun onAssetClick(asset: Asset) {
-        Log.d(TAG, "CLICK!")
+        val directions = FavoriteFragmentDirections.actionFavoriteToMarketDetail(asset)
+        findNavController().navigate(directions)
     }
 }

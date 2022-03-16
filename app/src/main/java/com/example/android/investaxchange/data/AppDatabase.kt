@@ -7,9 +7,9 @@ import androidx.room.Database
 
 const val DATABASE_NAME = "investa-xchange-db"
 
-@Database(entities = [GitHubRepo::class], version = 1)
+@Database(entities = [Asset::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun gitHubRepoDao(): GitHubRepoDao
+    abstract fun assetDao(): AssetDao
 
     companion object {
         @Volatile private var instance: AppDatabase? = null
@@ -24,6 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+                .allowMainThreadQueries() // This is cheese, but idgaf
                 .build()
     }
 }

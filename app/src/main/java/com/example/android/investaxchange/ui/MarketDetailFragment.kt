@@ -29,7 +29,6 @@ import com.tradingview.lightweightcharts.api.series.models.Time
 import com.tradingview.lightweightcharts.view.ChartsView
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 class MarketDetailFragment : Fragment(R.layout.market_detail) {
     private val args: MarketDetailFragmentArgs by navArgs()
@@ -37,6 +36,7 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
     private val barsViewModel: AlpacaAssetBarsViewModel by viewModels()
     private val snapshotViewModel: AlpacaAssetSnapshotViewModel by viewModels()
     private val orderViewModel: AlpacaOrderViewModel by viewModels()
+    private val favoriteViewModel: AlpacaFavoritesViewModel by viewModels()
 
     private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
 
@@ -133,6 +133,11 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.activity_market_detail, menu)
+        if (favoriteViewModel.assetExists(args.asset.id)) {
+            var fav: MenuItem = menu.getItem(0)
+            fav.setIcon(R.drawable.ic_action_favorite_on)
+            fav.isChecked = true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -142,7 +147,6 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
                 true
             }
             R.id.action_favorite -> {
-                Log.d("MarketDetail", "Clicking")
                 if (item.isChecked) {
                     item.setIcon(R.drawable.ic_action_favorite_off)
                     item.isChecked = false
