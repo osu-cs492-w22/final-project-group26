@@ -35,12 +35,12 @@
         android:label="@string/label_home">
         <action
             android:id="@+id/navigate_to_portfolio_asset_detail"
-            app:destination="@id/portfolio_asset_detail" />
+            app:destination="@id/portfolioDetailFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/portfolio_asset_detail"
-        android:name="com.example.android.investaxchange.ui.HomeFragment"
+        android:id="@+id/portfolioDetailFragment"
+        android:name="com.example.android.investaxchange.ui.PortfolioDetailFragment"
         android:label="@string/label_portfolio_asset_detail">
         <argument
             android:name="portfolioAsset"

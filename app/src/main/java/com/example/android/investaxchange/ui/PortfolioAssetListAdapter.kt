@@ -1,12 +1,15 @@
 package com.example.android.investaxchange.ui
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
 import com.example.android.investaxchange.data.PortfolioAssets
+import com.google.android.material.card.MaterialCardView
 
 class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> Unit)
     : RecyclerView.Adapter<PortfolioAssetListAdapter.AssetViewHolder>() {
@@ -25,11 +28,12 @@ class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> U
     }
 
     override fun onBindViewHolder(holder: AssetViewHolder, position: Int) {
-        holder.bind(portfolioAssetList[position])
+        holder.bind(portfolioAssetList[position], position)
     }
 
     class AssetViewHolder(itemView: View, val onClick: (PortfolioAssets) -> Unit)
         : RecyclerView.ViewHolder(itemView) {
+        private val cardTV : MaterialCardView = itemView.findViewById(R.id.portfolio_card)
         private val symbolTV : TextView = itemView.findViewById(R.id.tv_portfolio_asset_symbol)
 //        private val nameTV: TextView = itemView.findViewById(R.id.tv_portfolio_asset_name)
         private val qtyTV: TextView = itemView.findViewById(R.id.tv_portfolio_asset_qty)
@@ -43,13 +47,19 @@ class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> U
             }
         }
 
-        fun bind(asset: PortfolioAssets) {
+        fun bind(asset: PortfolioAssets, pos: Int) {
             currentAsset = asset
             symbolTV.text = asset.symbol
 //            nameTV.text = "None"
             qtyTV.text = asset.qty
             avgpriceTV.text = asset.avg_entry_price
             priceTV.text = asset.current_price
+            if (pos % 2 == 0) {
+                cardTV.setBackgroundColor(Color.WHITE)
+            }else {
+                cardTV.setBackgroundColor(Color.LTGRAY)
+            }
+
         }
     }
 }
