@@ -19,7 +19,6 @@ import com.example.android.investaxchange.R
 import com.example.android.investaxchange.data.LoadingStatus
 import com.example.android.investaxchange.data.UserAccount
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import org.w3c.dom.Text
 
 
 class UserFragment : Fragment(R.layout.fragment_user) {
@@ -48,7 +47,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         loadingIndicator = view.findViewById(R.id.loading_indicator)
         scrollView = view.findViewById(R.id.scroll_view)
 
-        viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
+        viewModel.account.observe(viewLifecycleOwner) { searchResults ->
             searchResults?.let {
                 tvAccountNumber.text = "Account ID: " + searchResults?.account_number
                 tvCreatedAt.text = "Created on: " + searchResults?.created_at.take(10)

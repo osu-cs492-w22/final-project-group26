@@ -14,8 +14,10 @@ import com.google.android.material.card.MaterialCardView
 class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> Unit)
     : RecyclerView.Adapter<PortfolioAssetListAdapter.AssetViewHolder>() {
     var portfolioAssetList: List<PortfolioAssets> = listOf()
+
     fun updateAssetList(newPortfolioAssetList: List<PortfolioAssets>?) {
-        portfolioAssetList = newPortfolioAssetList?: listOf()
+        portfolioAssetList = newPortfolioAssetList ?: listOf()
+//        portfolioAssetList = (newPortfolioAssetList ?: listOf()).sortedByDescending { it.qty.toInt() * it.current_price.toDouble() }
         notifyDataSetChanged()
     }
 
@@ -52,14 +54,10 @@ class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> U
             symbolTV.text = asset.symbol
 //            nameTV.text = "None"
             qtyTV.text = asset.qty
-            avgpriceTV.text = asset.avg_entry_price
-            priceTV.text = asset.current_price
-            if (pos % 2 == 0) {
-                cardTV.setBackgroundColor(Color.WHITE)
-            }else {
-                cardTV.setBackgroundColor(Color.LTGRAY)
-            }
+            avgpriceTV.text = String.format("%.2f", asset.avg_entry_price.toDouble())
+            priceTV.text = String.format("%.2f", asset.current_price.toDouble())
 
+            cardTV.setBackgroundColor(if (pos % 2 == 0) Color.WHITE else Color.LTGRAY)
         }
     }
 }

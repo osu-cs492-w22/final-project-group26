@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 class AlpacaAssetsViewModel : ViewModel() {
     private val repository = AlpacaRepository(AlpacaDataService.create(), AlpacaTradingService.create())
 
-    private val _searchResults = MutableLiveData<List<Asset>?>(null)
-    val searchResults: LiveData<List<Asset>?> = _searchResults
+    private val _assets = MutableLiveData<List<Asset>?>(null)
+    val assets: LiveData<List<Asset>?> = _assets
 
     private val _loadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
     val loadingStatus: LiveData<LoadingStatus> = _loadingStatus
@@ -24,7 +24,7 @@ class AlpacaAssetsViewModel : ViewModel() {
         viewModelScope.launch {
             _loadingStatus.value = LoadingStatus.LOADING
             val result = repository.loadAssets()
-            _searchResults.value = result.getOrNull()
+            _assets.value = result.getOrNull()
             _loadingStatus.value = when (result.isSuccess) {
                 true ->  LoadingStatus.SUCCESS
                 false -> LoadingStatus.ERROR

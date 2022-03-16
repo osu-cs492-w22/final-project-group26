@@ -1,13 +1,11 @@
 package com.example.android.investaxchange.ui
 
-import android.app.ActionBar
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.view.SupportActionModeWrapper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -45,7 +43,7 @@ class MarketFragment : Fragment(R.layout.market) {
 
         searchResultsListRV.adapter = assetListAdapter
 
-        viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
+        viewModel.assets.observe(viewLifecycleOwner) { searchResults ->
             assetListAdapter.updateAssetList(searchResults)
             assetListAdapter.filter(searchBoxET.text.toString())
         }

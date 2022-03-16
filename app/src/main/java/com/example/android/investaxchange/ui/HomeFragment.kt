@@ -1,13 +1,10 @@
 package com.example.android.investaxchange.ui
 
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.WindowInsets
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
-import com.example.android.investaxchange.data.GitHubRepo
 import com.example.android.investaxchange.data.LoadingStatus
 import com.example.android.investaxchange.data.PortfolioAssets
 import com.google.android.material.progressindicator.CircularProgressIndicator
@@ -29,14 +25,18 @@ import com.tradingview.lightweightcharts.api.series.enums.LineWidth
 import com.tradingview.lightweightcharts.api.series.models.HistogramData
 import com.tradingview.lightweightcharts.api.series.models.Time
 import com.tradingview.lightweightcharts.view.ChartsView
+import java.text.DecimalFormat
 import java.util.*
 
 class HomeFragment : Fragment(R.layout.home) {
     private val TAG = "HomeFragment"
 
     private val portfolioAssetListAdapter = PortfolioAssetListAdapter(::onPorfolioAssetClick)
-    private val viewModel: AlpacaPortfolioViewModel by viewModels()
-    private val viewModel2: AlpacaPortfolioAssetsViewModel by viewModels()
+
+    private val portfolioViewModel: AlpacaPortfolioViewModel by viewModels()
+    private val portfolioAssetsViewModel: AlpacaPortfolioAssetsViewModel by viewModels()
+    private val accountViewModel: AlpacaAccountViewModel by viewModels()
+
     private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
 
     private lateinit var searchResultsListRV: RecyclerView
@@ -66,7 +66,7 @@ class HomeFragment : Fragment(R.layout.home) {
             when (state) {
                 is ChartsView.State.Preparing -> Unit
                 is ChartsView.State.Ready -> {
-                    viewModel.searchResults.observe(viewLifecycleOwner) { searchResult ->
+                    portfolioViewModel.portfolio.observe(viewLifecycleOwner) { searchResult ->
                         if (searchResult != null) {
                             val mapData: Map< Long, Float> =
                                 searchResult.timeStamp
@@ -82,15 +82,11 @@ class HomeFragment : Fragment(R.layout.home) {
                             }
 
                             series.setData(histogramData)
-                            view.findViewById<TextView>(R.id.portfolio_value).text = "$${String.format("%.2f", histogramData.last().value)}"
-                        }
-                        else {
-                            view.findViewById<TextView>(R.id.portfolio_value).text = "Loading..."
                         }
                     }
 
                     applyChartOptions()
-                    viewModel.loadAccountResult("1D", "15Min", true)
+                    portfolioViewModel.loadAccountResult("1D", "15Min", true)
                 }
                 is ChartsView.State.Error -> {
                     Log.d("HomeFragment", state.exception.message ?: "")
@@ -100,15 +96,15 @@ class HomeFragment : Fragment(R.layout.home) {
 
         val searchBtn1: Button = view.findViewById(R.id.home_chart_Day)
         searchBtn1.setOnClickListener {
-            viewModel.loadAccountResult("1D", "15Min", true)
+            portfolioViewModel.loadAccountResult("1D", "15Min", true)
         }
         val searchBtn2: Button = view.findViewById(R.id.home_chart_Week)
         searchBtn2.setOnClickListener {
-            viewModel.loadAccountResult("1W", "1H", true)
+            portfolioViewModel.loadAccountResult("1W", "1H", true)
         }
         val searchBtn3: Button = view.findViewById(R.id.home_chart_Month)
         searchBtn3.setOnClickListener {
-            viewModel.loadAccountResult("1M", "1D", true)
+            portfolioViewModel.loadAccountResult("1M", "1D", true)
         }
 
         searchResultsListRV = view.findViewById(R.id.rv_portfolio_asset_results)
@@ -120,11 +116,11 @@ class HomeFragment : Fragment(R.layout.home) {
 
         searchResultsListRV.adapter = portfolioAssetListAdapter
 
-        viewModel2.portfolioAssets.observe(viewLifecycleOwner) { searchResults ->
+        portfolioAssetsViewModel.portfolioAssets.observe(viewLifecycleOwner) { searchResults ->
             portfolioAssetListAdapter.updateAssetList(searchResults)
         }
 
-        viewModel2.loadingStatus.observe(viewLifecycleOwner) { uiState ->
+        portfolioAssetsViewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 LoadingStatus.LOADING -> {
                     loadingIndicator.visibility = View.VISIBLE
@@ -144,7 +140,17 @@ class HomeFragment : Fragment(R.layout.home) {
             }
         }
 
-        viewModel2.loadPortfolioAssets()
+        accountViewModel.account.observe(viewLifecycleOwner) { account ->
+            if (account == null) {
+                view.findViewById<TextView>(R.id.portfolio_value).text = "Loading..."
+            } else {
+                val text = DecimalFormat("#,###.00").format(account?.portfolio_value.toDouble())
+                view.findViewById<TextView>(R.id.portfolio_value).text = "$$text"
+            }
+        }
+
+        portfolioAssetsViewModel.loadPortfolioAssets()
+        accountViewModel.loadAccountResult()
     }
 
     private fun onPorfolioAssetClick(portfolioAssets: PortfolioAssets) {
@@ -184,6 +190,7 @@ class HomeFragment : Fragment(R.layout.home) {
                 borderColor = Color.argb(255, 197, 203, 206).toIntColor()
                 barSpacing = 50.0f
                 minBarSpacing = 6.0f
+                timeVisible = true
             }
             trackingMode = TrackingModeOptions(exitMode = TrackingModeExitMode.ON_TOUCH_END)
         }
