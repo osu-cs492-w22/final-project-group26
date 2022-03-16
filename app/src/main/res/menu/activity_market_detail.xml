@@ -4,8 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_favorite"
-        android:title="action_favorite"
-        app:actionLayout="@layout/favorite_button_toggle"
+        android:title="@string/action_favorite"
+        android:icon="@drawable/ic_action_favorite_off"
+        android:checked="false"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_share"

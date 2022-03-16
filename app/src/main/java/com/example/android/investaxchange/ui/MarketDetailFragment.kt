@@ -139,6 +139,17 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
                 shareMarketDetail()
                 true
             }
+            R.id.action_favorite -> {
+                Log.d("MarketDetail", "Clicking")
+                if (item.isChecked) {
+                    item.setIcon(R.drawable.ic_action_favorite_off)
+                    item.isChecked = false
+                } else {
+                    item.setIcon(R.drawable.ic_action_favorite_on)
+                    item.isChecked = true
+                }
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
