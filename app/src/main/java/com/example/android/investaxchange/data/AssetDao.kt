@@ -19,4 +19,7 @@ interface AssetDao {
 
     @Query("SELECT EXISTS (SELECT 1 FROM Asset WHERE id = :id)")
     fun exists(id: String): Boolean
+
+    @Query("SELECT EXISTS (SELECT 1 FROM Asset WHERE symbol = :sym)")
+    fun symbolExists(sym: String): Boolean
 }

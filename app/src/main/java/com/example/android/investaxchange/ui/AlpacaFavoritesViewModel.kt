@@ -50,4 +50,11 @@ class AlpacaFavoritesViewModel(application: Application) : AndroidViewModel(appl
         }
         return res
     }
+    fun assetExistsSymbol(symbol: String): Boolean {
+        var res: Boolean = false
+        viewModelScope.launch {
+            res = database.assetSymbolExists(symbol)
+        }
+        return res
+    }
 }

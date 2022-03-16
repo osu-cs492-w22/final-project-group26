@@ -8,4 +8,5 @@ class FavoriteAssets(
     fun getAllAssets() = dao.getAllAssets()
     fun getAssetByName(name: String) = dao.getAssetByName(name)
     fun assetExists(id: String): Boolean = dao.exists(id)
+    fun assetSymbolExists(symbol: String): Boolean = dao.symbolExists(symbol)
 }

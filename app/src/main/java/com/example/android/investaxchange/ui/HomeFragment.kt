@@ -38,6 +38,7 @@ class HomeFragment : Fragment(R.layout.home) {
     private val accountViewModel: AlpacaAccountViewModel by viewModels()
 
     private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
+    private var price: String = ""
 
     private lateinit var searchResultsListRV: RecyclerView
     private lateinit var searchErrorTV: TextView
@@ -57,6 +58,19 @@ class HomeFragment : Fragment(R.layout.home) {
             onSeriesCreated = { series = it }
         )
 
+        chartsView.api.subscribeCrosshairMove {
+            if (it != null) {
+                if (it.seriesPrices != null) {
+                    if (it.time != null) {
+                        val text = DecimalFormat("#,###.00").format(it.seriesPrices?.get(0)?.prices?.value?.toDouble())
+                        view.findViewById<TextView>(R.id.portfolio_value).text = "$$text"
+                    }else {
+                        view.findViewById<TextView>(R.id.portfolio_value).text = "$price"
+                    }
+
+                }
+            }
+        }
         /*
         *
         * Creates a chart with newly updated results from portfolio
@@ -85,6 +99,8 @@ class HomeFragment : Fragment(R.layout.home) {
                         }
                     }
 
+
+
                     applyChartOptions()
                     portfolioViewModel.loadAccountResult("1D", "15Min", true)
                 }
@@ -93,6 +109,7 @@ class HomeFragment : Fragment(R.layout.home) {
                 }
             }
         }
+
 
         val searchBtn1: Button = view.findViewById(R.id.home_chart_Day)
         searchBtn1.setOnClickListener {
@@ -146,6 +163,7 @@ class HomeFragment : Fragment(R.layout.home) {
             } else {
                 val text = DecimalFormat("#,###.00").format(account?.portfolio_value.toDouble())
                 view.findViewById<TextView>(R.id.portfolio_value).text = "$$text"
+                price = "$$text"
             }
         }
 
@@ -183,14 +201,15 @@ class HomeFragment : Fragment(R.layout.home) {
                     top = 0.35f,
                     bottom = 0.2f
                 )
-                borderColor = Color.argb(0, 197, 203, 206).toIntColor()
+                borderVisible = false
+                borderColor = Color.argb(255, 197, 203, 206).toIntColor()
             }
             timeScale = timeScaleOptions {
-                //fixRightEdge = true
+                fixRightEdge = true
                 borderColor = Color.argb(255, 197, 203, 206).toIntColor()
-                barSpacing = 50.0f
-                minBarSpacing = 6.0f
                 timeVisible = true
+                borderVisible = false
+
             }
             trackingMode = TrackingModeOptions(exitMode = TrackingModeExitMode.ON_TOUCH_END)
         }

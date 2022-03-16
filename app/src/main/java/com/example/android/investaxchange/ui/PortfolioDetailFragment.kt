@@ -37,6 +37,7 @@ class PortfolioDetailFragment : Fragment(R.layout.market_detail) {
     private val barsViewModel: AlpacaAssetBarsViewModel by viewModels()
     private val snapshotViewModel: AlpacaAssetSnapshotViewModel by viewModels()
     private val orderViewModel: AlpacaOrderViewModel by viewModels()
+    private val favoriteViewModel: AlpacaFavoritesViewModel by viewModels()
 
     private val chartsView get() = requireView().findViewById<ChartsView>(R.id.charts_view)
 
@@ -132,6 +133,11 @@ class PortfolioDetailFragment : Fragment(R.layout.market_detail) {
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.activity_market_detail, menu)
+        if (favoriteViewModel.assetExistsSymbol(args.portfolioAsset.symbol)) {
+            val fav: MenuItem = menu.getItem(0)
+            fav.setIcon(R.drawable.ic_action_favorite_on)
+            fav.isChecked = true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -187,12 +193,15 @@ class PortfolioDetailFragment : Fragment(R.layout.market_detail) {
                     top = 0.35f,
                     bottom = 0.2f
                 )
+                borderVisible = false
                 borderColor = Color.argb(255, 197, 203, 206).toIntColor()
             }
             timeScale = timeScaleOptions {
                 fixRightEdge = true
                 borderColor = Color.argb(255, 197, 203, 206).toIntColor()
                 timeVisible = true
+                borderVisible = false
+
             }
             trackingMode = TrackingModeOptions(exitMode = TrackingModeExitMode.ON_TOUCH_END)
         }
