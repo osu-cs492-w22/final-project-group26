@@ -5,12 +5,11 @@ import com.example.android.investaxchange.data.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface AlpacaTradingService {
     /**
@@ -77,4 +76,16 @@ interface AlpacaTradingService {
             return retrofit.create(AlpacaTradingService::class.java)
         }
     }
+
+    /**
+     * Add an asset to the main watchlist for cloud storage
+     */
+    @POST("/v2/watchlists/7aba2d78-c838-40f1-a60b-39e11c3557c3")
+    suspend fun createFavorite(@Body newasset: newAsset): Response<ResponseBody>
+
+    /**
+     * Remove an asset from the watchlist for completely syncronous local/cloud storage
+     */
+    @DELETE("/v2/watchlists/7aba2d78-c838-40f1-a60b-39e11c3557c3/{symbol}")
+    suspend fun removeFavorite(@Path("symbol") symbol: String): Response<ResponseBody>
 }

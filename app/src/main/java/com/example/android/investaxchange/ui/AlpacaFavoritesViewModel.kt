@@ -34,12 +34,14 @@ class AlpacaFavoritesViewModel(application: Application) : AndroidViewModel(appl
     fun addAsset(asset: Asset){
         viewModelScope.launch {
             database.insertAsset(asset)
+            repository.createFavoriteAsset(asset.symbol)
         }
     }
 
     fun removeAsset(asset: Asset){
         viewModelScope.launch {
             database.removeAsset(asset)
+            repository.removeFavoriteAsset(asset.symbol)
         }
     }
 
