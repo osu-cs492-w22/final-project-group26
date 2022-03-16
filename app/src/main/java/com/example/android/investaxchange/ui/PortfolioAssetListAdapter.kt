@@ -30,7 +30,7 @@ class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> U
     }
 
     override fun onBindViewHolder(holder: AssetViewHolder, position: Int) {
-        holder.bind(portfolioAssetList[position], position)
+        holder.bind(portfolioAssetList[position])
     }
 
     class AssetViewHolder(itemView: View, val onClick: (PortfolioAssets) -> Unit)
@@ -41,6 +41,7 @@ class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> U
         private val qtyTV: TextView = itemView.findViewById(R.id.tv_portfolio_asset_qty)
         private val avgpriceTV: TextView = itemView.findViewById(R.id.tv_portfolio_asset_avgprice)
         private val priceTV: TextView = itemView.findViewById(R.id.tv_portfolio_asset_price)
+        private val diffTV: TextView = itemView.findViewById(R.id.tv_portfolio_diff)
         private var currentAsset: PortfolioAssets? = null
 
         init {
@@ -49,7 +50,7 @@ class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> U
             }
         }
 
-        fun bind(asset: PortfolioAssets, pos: Int) {
+        fun bind(asset: PortfolioAssets) {
             currentAsset = asset
             symbolTV.text = asset.symbol
 //            nameTV.text = "None"
@@ -57,7 +58,17 @@ class PortfolioAssetListAdapter(private val onAssetClick: (PortfolioAssets) -> U
             avgpriceTV.text = String.format("%.2f", asset.avg_entry_price.toDouble())
             priceTV.text = String.format("%.2f", asset.current_price.toDouble())
 
-            cardTV.setBackgroundColor(if (pos % 2 == 0) Color.WHITE else Color.LTGRAY)
+            val diff = (asset.current_price.toDouble() - asset.avg_entry_price.toDouble()) * asset.qty.toDouble()
+
+            if (diff < 0) {
+                diffTV.text = String.format("%.2f", diff)
+                diffTV.setTextColor(Color.RED)
+            } else if (diff > 0) {
+                diffTV.text = String.format("+%.2f", diff)
+                diffTV.setTextColor(Color.argb(250, 0, 187, 90))
+            } else {
+                diffTV.setTextColor(Color.GRAY)
+            }
         }
     }
 }
