@@ -4,32 +4,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/pref_category_search">
-        <ListPreference
-            android:title="@string/pref_sort_title"
-            android:key="@string/pref_sort_key"
-            android:entries="@array/pref_sort_entries"
-            android:entryValues="@array/pref_sort_values"
-            android:defaultValue="@string/pref_sort_default"
-            android:dialogTitle="@string/pref_sort_title"
-            app:useSimpleSummaryProvider="true" />
+<!--        <ListPreference-->
+<!--            android:title="@string/pref_sort_title"-->
+<!--            android:key="@string/pref_sort_key"-->
+<!--            android:entries="@array/pref_sort_entries"-->
+<!--            android:entryValues="@array/pref_sort_values"-->
+<!--            android:defaultValue="@string/pref_sort_default"-->
+<!--            android:dialogTitle="@string/pref_sort_title"-->
+<!--            app:useSimpleSummaryProvider="true" />-->
 
-        <MultiSelectListPreference
-            android:title="@string/pref_language_title"
-            android:key="@string/pref_language_key"
-            android:entries="@array/pref_language_entries"
-            android:entryValues="@array/pref_language_values"
-            android:dialogTitle="@string/pref_language_title" />
+<!--        <MultiSelectListPreference-->
+<!--            android:title="@string/pref_language_title"-->
+<!--            android:key="@string/pref_language_key"-->
+<!--            android:entries="@array/pref_language_entries"-->
+<!--            android:entryValues="@array/pref_language_values"-->
+<!--            android:dialogTitle="@string/pref_language_title" />-->
 
-        <EditTextPreference
-            android:title="@string/pref_user_title"
-            android:key="@string/pref_user_key"
-            app:useSimpleSummaryProvider="true" />
+<!--        <EditTextPreference-->
+<!--            android:title="@string/pref_user_title"-->
+<!--            android:key="@string/pref_user_key"-->
+<!--            app:useSimpleSummaryProvider="true" />-->
 
         <SeekBarPreference
-            android:title="@string/pref_first_issues_title"
-            android:key="@string/pref_first_issues_key"
-            android:max="8"
+            android:title="@string/pref_datapoint_title"
+            android:key="@string/pref_datapoint_key"
+            android:min="1"
+            android:max="10000"
             app:showSeekBarValue="true" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

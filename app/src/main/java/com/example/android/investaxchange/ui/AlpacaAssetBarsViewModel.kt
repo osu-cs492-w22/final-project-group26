@@ -20,7 +20,7 @@ class AlpacaAssetBarsViewModel : ViewModel() {
     private val _loadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
     val loadingStatus: LiveData<LoadingStatus> = _loadingStatus
 
-    fun loadBars(symbol: String, days: Int) {
+    fun loadBars(symbol: String, days: Int, n_datapoints: Int) {
         viewModelScope.launch {
             val endMillis = System.currentTimeMillis() - 15 * 60 * 1000L;
             val startMillis = endMillis - days * 24 * 60 * 60 * 1000L;
@@ -35,7 +35,7 @@ class AlpacaAssetBarsViewModel : ViewModel() {
             val startTime = sdf.format(startDate)
 
             _loadingStatus.value = LoadingStatus.LOADING
-            val result = repository.loadBars(symbol, startTime, endTime)
+            val result = repository.loadBars(symbol, startTime, endTime, n_datapoints)
             _bars.value = result.getOrNull()?.bars
             _loadingStatus.value = when (result.isSuccess) {
                 true ->  LoadingStatus.SUCCESS

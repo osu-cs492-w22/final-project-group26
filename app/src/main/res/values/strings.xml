@@ -51,6 +51,10 @@
 
     <string name="pref_sort_default">@string/pref_sort_val_stars</string>
 
+    <string name="pref_datapoint_title">Number of Data Points</string>
+    <string name="pref_datapoint_key" translatable="false">Number of Data Points</string>
+
+
     <string name="pref_language_entry_c">C</string>
     <string name="pref_language_entry_cpp">C++</string>
     <string name="pref_language_entry_java">Java</string>

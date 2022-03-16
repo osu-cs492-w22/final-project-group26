@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.preference.PreferenceManager
 import com.example.android.investaxchange.R
 import com.tradingview.lightweightcharts.api.chart.models.color.surface.SolidColor
 import com.tradingview.lightweightcharts.api.chart.models.color.toIntColor
@@ -42,7 +43,16 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
         view.findViewById<TextView>(R.id.tv_market_name).text = args.asset.symbol
         view.findViewById<TextView>(R.id.tv_market_description).text = args.asset.name
 
-        barsViewModel.loadBars(args.asset.symbol, 30)
+        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        var n_datapoints = sharedPrefs.getInt(
+            getString(R.string.pref_datapoint_key),
+            1
+        )
+
+        if (n_datapoints == 0)
+            n_datapoints = 1
+
+        barsViewModel.loadBars(args.asset.symbol, 30, n_datapoints)
         snapshotViewModel.loadSnapshot(args.asset.symbol)
         snapshotViewModel.snapshot.observe(viewLifecycleOwner) {
             if (it?.latestTrade?.price == null) {

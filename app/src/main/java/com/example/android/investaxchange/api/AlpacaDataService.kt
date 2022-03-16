@@ -46,8 +46,8 @@ interface AlpacaDataService {
         @Path("symbol") symbol: String,
         @Query("start") start: String,
         @Query("end") end: String,
-        @Query("timeframe") timeframe: String = "1Hour",
-        @Query("limit") limit: Int = 10000) : BarsResponse
+        @Query("limit") limit: Int,
+        @Query("timeframe") timeframe: String = "1Hour") : BarsResponse
 
     companion object {
         private const val BASE_URL = "https://data.alpaca.markets/"

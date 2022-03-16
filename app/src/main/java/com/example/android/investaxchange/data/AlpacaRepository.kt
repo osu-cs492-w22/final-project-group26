@@ -42,10 +42,10 @@ class AlpacaRepository(
             }
         }
 
-    suspend fun loadBars(symbol: String, start: String, end: String): Result<BarsResponse> =
+    suspend fun loadBars(symbol: String, start: String, end: String, n_datapoints: Int): Result<BarsResponse> =
         withContext(ioDispatcher) {
             try {
-                val results = dataService.getBars(symbol, start, end)
+                val results = dataService.getBars(symbol, start, end, n_datapoints)
                 Result.success(results)
             } catch (e: Exception) {
                 Result.failure(e)
