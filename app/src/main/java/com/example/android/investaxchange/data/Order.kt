@@ -17,6 +17,12 @@ data class OrderRequest(
 
     @Json(name = "time_in_force")
     val timeInForce: String,
+
+    @Json(name = "limit_price")
+    val limitPrice: Double? = null,
+
+    @Json(name = "extended_hours")
+    val extendedHours: Boolean? = null,
 )
 
 data class Order(

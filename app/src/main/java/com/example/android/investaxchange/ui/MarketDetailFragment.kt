@@ -125,8 +125,10 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
         symbol = args.asset.symbol,
         qty = qty,
         side = "buy",
-        type = "market",
+        type = "limit",
+        limitPrice = snapshotViewModel.snapshot.value?.latestTrade?.price?.times(1.03),
         timeInForce = "day",
+        extendedHours = true,
     )
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -157,7 +159,7 @@ class MarketDetailFragment : Fragment(R.layout.market_detail) {
     private fun shareMarketDetail() {
         val price = snapshotViewModel.snapshot.value?.latestTrade?.price ?: 0
 
-        val text = getString(R.string.share_text, args.asset.symbol, String.format("%.2f", price.toDouble()))
+        val text = getString(R.string.share_text, args.asset.symbol, "%.2f".format(price.toDouble()))
         val intent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, text)
