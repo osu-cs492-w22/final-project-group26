@@ -1,30 +1,27 @@
 package com.example.android.investaxchange.ui
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
+import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.investaxchange.R
 import com.example.android.investaxchange.data.Asset
-import com.example.android.investaxchange.data.GitHubRepo
 import com.example.android.investaxchange.data.LoadingStatus
+import com.example.android.investaxchange.data.Watchlists
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class FavoriteFragment : Fragment(R.layout.favorite) {
     private val TAG = "FavoriteFragment"
 
-    private val repoListAdapter = AssetListAdapter(::onAssetClick)
-    private val viewModel: GitHubSearchViewModel by viewModels()
+    //private val repoListAdapter = AssetListAdapter(::onAssetClick)
+    private val assetListAdapter = AssetListAdapter(::onAssetClick)
+    //private val viewModel: GitHubSearchViewModel by viewModels()
+    private val viewModel2: AlpacaFavoritesViewModel by viewModels()
 
     private lateinit var searchBoxET: EditText
     private lateinit var searchResultsListRV: RecyclerView
@@ -42,12 +39,12 @@ class FavoriteFragment : Fragment(R.layout.favorite) {
         searchResultsListRV.layoutManager = LinearLayoutManager(requireContext())
         searchResultsListRV.setHasFixedSize(true)
 
-        searchResultsListRV.adapter = repoListAdapter
+        searchResultsListRV.adapter = assetListAdapter
 
 //        viewModel.searchResults.observe(viewLifecycleOwner) { searchResults ->
 //            repoListAdapter.updateRepoList(searchResults)
 //        }
-
+/*
         viewModel.loadingStatus.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 LoadingStatus.LOADING -> {
@@ -94,10 +91,35 @@ class FavoriteFragment : Fragment(R.layout.favorite) {
                 searchResultsListRV.scrollToPosition(0)
             }
         }
+*/
+        viewModel2.watchlists.observe(viewLifecycleOwner) { searchResults ->
+            assetListAdapter.updateAssetList(searchResults)
+        }
+
+        viewModel2.loadingStatus.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                LoadingStatus.LOADING -> {
+                    loadingIndicator.visibility = View.VISIBLE
+                    searchResultsListRV.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.INVISIBLE
+                }
+                LoadingStatus.ERROR -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    searchResultsListRV.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.VISIBLE
+                }
+                else -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    searchResultsListRV.visibility = View.VISIBLE
+                    searchErrorTV.visibility = View.INVISIBLE
+                }
+            }
+        }
+
+        viewModel2.loadWatchlists()
     }
 
     private fun onAssetClick(asset: Asset) {
-//        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo, 16)
-//        findNavController().navigate(directions)
+        Log.d(TAG, "CLICK!")
     }
 }

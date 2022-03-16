@@ -1,5 +1,6 @@
 package com.example.android.investaxchange.data
 
+import android.util.Log
 import com.example.android.investaxchange.api.AlpacaDataService
 import com.example.android.investaxchange.api.AlpacaTradingService
 import kotlinx.coroutines.CoroutineDispatcher
@@ -42,7 +43,12 @@ class AlpacaRepository(
             }
         }
 
-    suspend fun loadBars(symbol: String, start: String, end: String, n_datapoints: Int): Result<BarsResponse> =
+    suspend fun loadBars(
+        symbol: String,
+        start: String,
+        end: String,
+        n_datapoints: Int
+    ): Result<BarsResponse> =
         withContext(ioDispatcher) {
             try {
                 val results = dataService.getBars(symbol, start, end, n_datapoints)
@@ -52,7 +58,11 @@ class AlpacaRepository(
             }
         }
 
-    suspend fun loadPortfolioHistory(period: String, timeframe: String, extendedHours: Boolean): Result<PortfolioHistory> =
+    suspend fun loadPortfolioHistory(
+        period: String,
+        timeframe: String,
+        extendedHours: Boolean
+    ): Result<PortfolioHistory> =
         withContext(ioDispatcher) {
             try {
                 val results = tradingService.getPortfolioHistory(period, timeframe, extendedHours)
@@ -67,6 +77,17 @@ class AlpacaRepository(
             try {
                 val results = tradingService.getPortfolioAssets()
                 Result.success(results)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
+    suspend fun loadWatchlists(): Result<List<Asset>> =
+        withContext(ioDispatcher) {
+            try {
+                val results = tradingService.getWatchlists()
+                Log.d("Repository", results.toString())
+                Result.success(results.assets)
             } catch (e: Exception) {
                 Result.failure(e)
             }

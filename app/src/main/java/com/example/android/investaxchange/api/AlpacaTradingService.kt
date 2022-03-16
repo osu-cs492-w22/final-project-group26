@@ -26,6 +26,12 @@ interface AlpacaTradingService {
     suspend fun getPortfolioAssets() : List<PortfolioAssets>
 
     /**
+     * Get a list of all assets being watched on the account
+     */
+    @GET("/v2/watchlists/7aba2d78-c838-40f1-a60b-39e11c3557c3")
+    suspend fun getWatchlists() : Watchlists
+
+    /**
      * Get lists with data for portfolio history.
      */
     @GET("/v2/account/portfolio/history")
